@@ -1,0 +1,65 @@
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 03/05/2026 17:08:57
+New results follow.
+-----------------------------------
+
+RSiena version 1.6.6 (20 Apr 26)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Current random number seed is 161.
+Effects object used: effects 
+Model Type:
+ Standard actor-oriented model 
+Estimation method: conditional moment estimation.
+Conditioning variable is the total number of observed changes ("distance") 
+in the network variable.
+Distances for simulations are
+period   :   1   2
+distance :  477 437.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.2000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  0.1  Rate parameter                         7.4542
+  0.2  Rate parameter                         6.8293
+  1. eval:  outdegree (density)                            -1.6130
+  2. eval:  reciprocity                                     0.0000
+  3. eval:  transitive triplets                             0.0000
+  4. eval:  3-cycles                                        0.0000
+  5. eval:  indegree - popularity (sqrt)                    0.0000
+  6. eval:  logdistance                                     0.0000
+  7. eval:  gender alter                                    0.0000
+  8. eval:  gender ego                                      0.0000
+  9. eval:  same gender                                     0.0000
+ 10. eval:  alcohol alter                                   0.0000
+ 11. eval:  alcohol ego                                     0.0000
+ 12. eval:  alcohol similarity                              0.0000
+
+
+Values of target statistics are
+  1. Number of ties                                                     909.0000
+  2. Number of reciprocated ties                                        548.0000
+  3. Number of transitive triplets                                     1146.0000
+  4. 3-cycles                                                           328.0000
+  5. Sum of indegrees x sqrt(indegree)                                 1956.3520
+  6. Sum of ties x logdistance                                         -189.9997
+  7. Sum indegrees x gender                                             -37.6047
+  8. Sum outdegrees x gender                                            -22.6047
+  9. Same values on gender                                              814.0000
+ 10. Sum indegrees x alcohol                                            -50.7907
+ 11. Sum outdegrees x alcohol                                           -59.7907
+ 12. Similarity on alcohol                                               46.7154
+These were calculated from the data.
+
+ 12 parameters, 12 statistics
+

@@ -1,6 +1,9 @@
 ---
 title: "Network Modeling: Assignment 2"
 output: pdf_document
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 **Group number**: 21\
@@ -44,9 +47,12 @@ $$
 
 It is not reasonable to assume tie independence for this network.
 
-Comparing the observed values computed at (2) with the expected values computed at (3), we observe that the proportion of mutual dyads is much higher than expected under independence, while the proportion of asymmetric dyads is substantially lower. The proportion of null dyads is also higher than predicted.
+Comparing the observed values computed at (2) with the expected values computed at (3), we observe that the proportion of mutual dyads is much higher than expected under independence, while the proportion of asymmetric dyads is substantially lower.
+The proportion of null dyads is also higher than predicted.
 
-This indicates that ties are not independent. In particular, there is evidence of positive reciprocity, meaning that the presence of a tie from $i$ to $j$ increases the likelihood of a tie from $j$ to $i$. Therefore, the assumption of tie independence is not appropriate for further analysis of this network.
+This indicates that ties are not independent.
+In particular, there is evidence of positive reciprocity, meaning that the presence of a tie from $i$ to $j$ increases the likelihood of a tie from $j$ to $i$.
+Therefore, the assumption of tie independence is not appropriate for further analysis of this network.
 
 ## 1.5
 
@@ -62,7 +68,9 @@ $$
   \bar{p_M}=\bar{p}^2=(3/7)^2\approx0.184
 $$
 
-While this modeled mutual tie probability ($0.184$) is very close to the observed mutual tie probability computed at (2) ($0.182$), this is still not a reasonable model to assume overall. If all 22 nodes have an outdegree of 9, the total number of ties in the network would have to be $22 \cdot 9 = 198$. However, the observed network only has $m = 134$ ties.
+While this modeled mutual tie probability ($0.184$) is very close to the observed mutual tie probability computed at (2) ($0.182$), this is still not a reasonable model to assume overall.
+If all 22 nodes have an outdegree of 9, the total number of ties in the network would have to be $22 \cdot 9 = 198$.
+However, the observed network only has $m = 134$ ties.
 
 ## 1.6
 
@@ -86,21 +94,31 @@ cugInd <- cug.test(
 cugTrans <- cug.test(obsMat, gtrans, cmode = "dyad.census", reps = 5000)
 ```
 
-The null hypothesis is $H_0$: *"The observed reciprocity is consistent with the random graph with the same number of edges"*. The conditional feature is the number of edges. From the below diagram, in the simulations, no random network has equal or more mutual dyads, and the p-value is $0$. Under a significance level of $\alpha=0.05$, we consider this result significant. Namely, reciprocity is much higher than expected by chance, and the null hypothesis is rejected.
+The null hypothesis is $H_0$: *"The observed reciprocity is consistent with the random graph with the same number of edges"*.
+The conditional feature is the number of edges.
+From the below diagram, in the simulations, no random network has equal or more mutual dyads, and the p-value is $0$.
+Under a significance level of $\alpha=0.05$, we consider this result significant.
+Namely, reciprocity is much higher than expected by chance, and the null hypothesis is rejected.
 
 ```{r}
 plot(cguRec)
 paste("p-value =", sprintf("%.3f", cguRec$pgteobs))
 ```
 
-The null hypothesis is $H_0$: *"The observed indegree centralization is consistent with the random graph with the same number of edges"*. The conditional feature is the number of edges. From the below diagram, a large part of random networks has equal or more mutual dyads, and the p-value is $0.720$, above a significance level of $\alpha=0.05$, so we consider this result not significant. We fail to reject the null hypothesis, suggesting that the network does not display a significant level of hierarchical structure.
+The null hypothesis is $H_0$: *"The observed indegree centralization is consistent with the random graph with the same number of edges"*.
+The conditional feature is the number of edges.
+From the below diagram, a large part of random networks has equal or more mutual dyads, and the p-value is $0.720$, above a significance level of $\alpha=0.05$, so we consider this result not significant.
+We fail to reject the null hypothesis, suggesting that the network does not display a significant level of hierarchical structure.
 
 ```{r}
 plot(cugInd)
 paste("p-value =", sprintf("%.3f", cugInd$pgteobs))
 ```
 
-The null hypothesis is $H_0$: *"The observed transitivity is consistent with random graphs having the same dyad census"*. The conditional features consist of the number of mutual dyads, asymmetric dyads, and null dyads. From the below diagram, none of the random networks has equal or more transitive triads, namely the p-value is $0$, under a significance level of $\alpha=0.05$. We consider this result significant, and the null hypothesis is rejected.
+The null hypothesis is $H_0$: *"The observed transitivity is consistent with random graphs having the same dyad census"*.
+The conditional features consist of the number of mutual dyads, asymmetric dyads, and null dyads.
+From the below diagram, none of the random networks has equal or more transitive triads, namely the p-value is $0$, under a significance level of $\alpha=0.05$.
+We consider this result significant, and the null hypothesis is rejected.
 
 ```{r}
 plot(cugTrans)
@@ -108,6 +126,7 @@ paste("p-value =", sprintf("%.3f", cugTrans$pgteobs))
 ```
 
 # Task 2: Estimation and interpretation of an ERGM
+
 ```{r}
 # Install packages from CRAN
 install.packages(
@@ -134,6 +153,7 @@ library(ggplot2)
 ```
 
 ## 2.1
+
 ```{r}
 # Reading the adjacency matrices using manynet::read_matrix()
 friendship <- read_matrix("Glasgow/f1.csv", header = FALSE)
@@ -170,7 +190,10 @@ cat(sprintf("  P(tie | diff gender)     :  %.4f  (%.1f %%)\n", prob_diff, prob_d
 cat(sprintf("  Ratio Same-Diff gender   :  %.4f  \n", prob_same/prob_diff))
 
 ```
-Both results hold strong evidence that edges are both sparse ($\theta_{edges}=-5.0133$) and homophillic ($\theta_{match}=2.0098$), as p << 0.05 in both cases. Although there is only a probability of $P_{same}= 4.7%$ for a tie to exist between two students of the same gender, it is still $7.1563$ times higher than the probability of a tie existing between two students of opposite gender $P_{diff}=0.7%$. The huge difference in Null Deviance to Residual Deviance ($22890 \rightarrow 3824$) also tells that the tie structure is very dependent on the chosen parameters.
+
+Both results hold strong evidence that edges are both sparse ($\theta_{edges}=-5.0133$) and homophillic ($\theta_{match}=2.0098$), as p \<\< 0.05 in both cases.
+Although there is only a probability of $P_{same}= 4.7\%$ for a tie to exist between two students of the same gender, it is still $7.1563$ times higher than the probability of a tie existing between two students of opposite gender $P_{diff}=0.7\%$.
+The huge difference in Null Deviance to Residual Deviance ($22890 \rightarrow 3824$) also tells that the tie structure is very dependent on the chosen parameters.
 
 ## 2.2
 
@@ -198,8 +221,8 @@ big_model <- ergm(net ~ edges + nodematch("gender") #same baseline as 2.1
                control = control.ergm(seed = 161, MCMLE.maxit = 40, MCMC.samplesize = 2048, 
                 MCMC.burnin = 10000, MCMC.interval = 500)
                )
-summary(big_model)
-mcmc.diagnostics(big_model)
+#summary(big_model)
+#mcmc.diagnostics(big_model)
 
 bigger_model <- ergm(net ~ edges + nodematch("gender") #same baseline as 2.1
                + mutual #(i) Reciprocity
@@ -222,303 +245,238 @@ mcmc.diagnostics(bigger_model)
 
 ```
 
-
 ## 2.3
 
-The ERGM model here itself has the 7 parameters to check for the wanted features ($i$ - $vii$). To achieve convergence we had to add in 2 more control parameters: $gwodegree$ and $gwidegree$. We see in the summary, that both $gwodegree$ and $gwidegree$ are significant, so they were important to explain the network and help with the convergence of the algorithm. 
-Using a high decay value like $\alpha = 0.3$ or $\alpha = 0.6$ gave problems while converging so we went for one on the lower bound of $\alpha = 0.1$, since the MCMC sampler tended to generate networks with way more edges than observed. The low $\alpha$ decay value also tells that in the network, transitivity is only important over short distances, and longer chains do not contribute much. 
+The ERGM model here itself has the 7 parameters to check for the wanted features ($i$ - $vii$).
+To achieve convergence we had to add in 2 more control parameters: $gwodegree$ and $gwidegree$.
+We see in the summary, that both $gwodegree$ and $gwidegree$ are significant, so they were important to explain the network and help with the convergence of the algorithm.
+Using a high decay value like $\alpha = 0.3$ or $\alpha = 0.6$ gave problems while converging so we went for one on the lower bound of $\alpha = 0.1$, since the MCMC sampler tended to generate networks with way more edges than observed.
+The low $\alpha$ decay value also tells that in the network, transitivity is only important over short distances, and longer chains do not contribute much.
 Using small parameters in the control parameter, the $mcmc.diagnostics()$ gave some bad results: The Mean was far away from 0 for many terms, the P-value was below or very close to $0.05$ and the omnibus value being at $3.4*10^{-6}$ indicates the model has not fully converged yet.
 All of this indicated that a longer MCMC run with larger parameters was needed as it is now the case.
-So from this first model we now expand on it further by changing the parameters in control to larger samplesize, burnin and interval. Further all this is done on the initial model as it just has not fully converged yet, and starting from these large settings gave a failure of convergence, as these are bad starting parameters.
+So from this first model we now expand on it further by changing the parameters in control to larger samplesize, burnin and interval.
+Further all this is done on the initial model as it just has not fully converged yet, and starting from these large settings gave a failure of convergence, as these are bad starting parameters.
 
-This second ERGM fit may have only one iteration until it finishes, but it improves most statistics shown in $mcmc.diagnostics()$. All terms now have a P-value above $0.05$, but most are still not close to 1. All individual Geweke statistics are within acceptable bounds and the Geweke joint P-value improved from $0.089$ to $0.212$, confirming chain stationarity. The omnibus P-value is significantly bigger at $0.008>>3.4*10^{-6}$ but still below $0.05$, which is fine since it is sensitive to large sample sizes and not indicative of systematic misfit in any specific statistic.
-
+This second ERGM fit may have only one iteration until it finishes, but it improves most statistics shown in $mcmc.diagnostics()$.
+All terms now have a P-value above $0.05$, but most are still not close to 1.
+All individual Geweke statistics are within acceptable bounds and the Geweke joint P-value improved from $0.089$ to $0.212$, confirming chain stationarity.
+The omnibus P-value is significantly bigger at $0.008>>3.4*10^{-6}$ but still below $0.05$, which is fine since it is sensitive to large sample sizes and not indicative of systematic misfit in any specific statistic.
 
 ## 2.4
 
 ```{r}
 gof_model <- gof(bigger_model, GOF = ~ idegree + odegree + espartners + distance) #+ dspartners
 
-# Plot four auxiliary statistics
-#summary(bigger_model)
+# Plot auxiliary statistics
 gof_model
 ```
+
 ```{r}
 ergm:::plot.gof(gof_model)
 ```
 
-Both the plot of $model$ $statistic$ and $idegree$ indicate a very good fit on these terms, as there are no outliers and their values are very close to the centre of the boxplots. This confirms that the model is internally consistent and that it reproduces the in-degree distribution well, it accurately captures how many nominations students receive.
-The $odegree$ plot is somewhat predictably wrong, it overestimates the count of nodes that have exactly $1$ outgoing edge and then has too few with those that have $3$-$6$ edges. It wrongly assumes that there are some nodes with more than $6$ outgoing edges, which is not possible per the data collection, as that only allowed up to $6$ friendship nominations per person, which is information that the model does not know about. 
+Both the plot of $model$ $statistic$ and $idegree$ indicate a very good fit on these terms, as there are no outliers and their values are very close to the centre of the boxplots.
+This confirms that the model is internally consistent and that it reproduces the in-degree distribution well, it accurately captures how many nominations students receive.
+The $odegree$ plot is somewhat predictably wrong, it overestimates the count of nodes that have exactly $1$ outgoing edge and then has too few with those that have $3$-$6$ edges.
+It wrongly assumes that there are some nodes with more than $6$ outgoing edges, which is not possible per the data collection, as that only allowed up to $6$ friendship nominations per person, which is information that the model does not know about.
 The $edge$-$wise$ $shared$ $partners$ plot shows that the model has problems with predicting triads, which suggests that the chosen decay value $\alpha = 0.1$ might not have been the best choice.
 The bad fitting of the $minimum$ $goedesic$ $distance$ plot shows that the estimated model is more fragmented and less connected than the real observed data would suggest.
-Overall, the model shows clear parts that can still be improved, for one there is the $\alpha$ decay value that could be tweaked until there are better results. There could also be more parameters that the model does not count for yet, like the fact that a node has a maximum out-degree of 6. It seems to be better with replicating local features, while its weaknesses lie with the global features.
+Overall, the model shows clear parts that can still be improved, for one there is the $\alpha$ decay value that could be tweaked until there are better results.
+There could also be more parameters that the model does not count for yet, like the fact that a node has a maximum out-degree of 6.
+It seems to be better with replicating local features, while its weaknesses lie with the global features.
 
 ## 2.5
 
 ```{r}
 summary(bigger_model)
 ```
-Terms not used for any hypothesis:
-The $edges$ coefficient of ($-5.95, p<0.001$) confirms that the friendship network is very sparse and a the probability for a tie existing between any two students is very low. Very logical for a huge network, where any student can only nominate a maximum of $6$ friends.
-Both $gwodegree$ ($+1.84, p<0.001$) and $gwidegree$ ($+1.60, p<0.001$) are significant, confirming there is a clear difference between how many nominations students both send and receive. Some students are far more social or popular than others.
-The gender homophily from 2.1 still stays relevant here with $nodematch.gender$ ($+0.85, p<0.001$) and indicates that it plays an important role in how ties are formed. It is to be noted though, that this term dropped from the model in 2.1 with a value of $+2.01$, so some of the networks model can be better explained by other terms introduced in this new bigger model.
 
-Hypothesis ($i$) Reciprocity:
-$mutual$ ($+3.02, p < 0.001$). The hypothesis is strongly supported by these values. If student j has nominated student i, the odds of i nominating j back are multiplied by $e^{3.02} ≈ 20.5$. This is the strongest effect that is found in this model, indicating it is a crucial deciding factor in how nominations are built up on.
+Terms not used for any hypothesis: The $edges$ coefficient of ($-5.95, p<0.001$) confirms that the friendship network is very sparse and a the probability for a tie existing between any two students is very low.
+Very logical for a huge network, where any student can only nominate a maximum of $6$ friends.
+Both $gwodegree$ ($+1.84, p<0.001$) and $gwidegree$ ($+1.60, p<0.001$) are significant, confirming there is a clear difference between how many nominations students both send and receive.
+Some students are far more social or popular than others.
+The gender homophily from 2.1 still stays relevant here with $nodematch.gender$ ($+0.85, p<0.001$) and indicates that it plays an important role in how ties are formed.
+It is to be noted though, that this term dropped from the model in 2.1 with a value of $+2.01$, so some of the networks model can be better explained by other terms introduced in this new bigger model.
 
-Hypothesis ($ii$) Transitivity:
-$gwesp$ ($+1.68, p < 0.001$). The hypothesis is strongly supported by these values. When two students share a common friend, a tie between them becomes significantly more likely. This supports a typical triadic closure structure in the model, which occurs in most social networks and also leads to the formation of clusters.
+Hypothesis ($i$) Reciprocity: $mutual$ ($+3.02, p < 0.001$).
+The hypothesis is strongly supported by these values.
+If student j has nominated student i, the odds of i nominating j back are multiplied by $e^{3.02} ≈ 20.5$.
+This is the strongest effect that is found in this model, indicating it is a crucial deciding factor in how nominations are built up on.
 
-Hypothesis ($iii$) Boys have higher social activity:
-$nodeofactor.gender$ ($−0.10, p = 0.498$). This hypothesis is not supported by these values. The coefficient for boys sending more nominations than girls is small and negative, which would suggest that the opposite is slightly true. This however is not the case either, since the P-value is so high and as such, not making it statistically significant.
+Hypothesis ($ii$) Transitivity: $gwesp$ ($+1.68, p < 0.001$).
+The hypothesis is strongly supported by these values.
+When two students share a common friend, a tie between them becomes significantly more likely.
+This supports a typical triadic closure structure in the model, which occurs in most social networks and also leads to the formation of clusters.
 
-Hypothesis ($iv$) Boys have higher popularity:
-$nodeifactor.gender$ ($+0.04, p = 0.800$). This hypothesis is not supported by these values. The coefficient is near zero and the high P-value means it is completely insignificant. Boys do not receive significantly more nominations than girls in this network, which, along with Hypothesis ($iii$), means that gender has no direct influence on how popular or socially active a person is.
+Hypothesis ($iii$) Boys have higher social activity: $nodeofactor.gender$ ($−0.10, p = 0.498$).
+This hypothesis is not supported by these values.
+The coefficient for boys sending more nominations than girls is small and negative, which would suggest that the opposite is slightly true.
+This however is not the case either, since the P-value is so high and as such, not making it statistically significant.
 
-Hypothesis ($v$) Alcohol consumption increases social activity:
-$nodeocov.alcohol$ ($−0.12, p = 0.032$). This hypothesis is not supported by these values, the somewhat low P-value along a negative coefficient say the opposite is supported. Higher alcohol consumption is associated with fewer outgoing nominations. A one unit increase in alcohol score decreases the odds of sending a tie by $e^{0.12} ≈ 1.127$, suggesting that heavier drinkers are actually less likely to actively nominate friends, contrary to the hypothesis. With four units difference from $1$ to $5$, this means an approximate odd decrease of $e^{0.12 * 4} ≈ 1.616$ for the heaviest drinkers.
+Hypothesis ($iv$) Boys have higher popularity: $nodeifactor.gender$ ($+0.04, p = 0.800$).
+This hypothesis is not supported by these values.
+The coefficient is near zero and the high P-value means it is completely insignificant.
+Boys do not receive significantly more nominations than girls in this network, which, along with Hypothesis ($iii$), means that gender has no direct influence on how popular or socially active a person is.
 
-Hypothesis ($vi$) Alcohol consumption increases popularity:
-$nodeicov.alcohol$ ($+0.16, p = 0.004$). The hypothesis is supported by these values. Students with higher alcohol consumption receive significantly more friendship nominations. A one unit increase in alcohol score increases the odds of receiving a tie by $e^{0.16} ≈ 1.174$, suggesting heavier drinkers are perceived as more popular or socially attractive by their peers. With four units difference from $1$ to $5$, this means an approximate odd increase of $e^{0.16 * 4} ≈ 1.896$ for the heaviest drinkers.
+Hypothesis ($v$) Alcohol consumption increases social activity: $nodeocov.alcohol$ ($−0.12, p = 0.032$).
+This hypothesis is not supported by these values, the somewhat low P-value along a negative coefficient say the opposite is supported.
+Higher alcohol consumption is associated with fewer outgoing nominations.
+A one unit increase in alcohol score decreases the odds-ratio of sending a tie by $e^{0.12} ≈ 1.127$, suggesting that heavier drinkers are actually less likely to actively nominate friends, contrary to the hypothesis.
+With four units difference from $1$ to $5$, this means an approximate odd-ratio decrease of $e^{0.12 * 4} ≈ 1.616$ for the heaviest drinkers in comparison to those with a value of $1$.
 
-Hypothesis ($vii$) Alcohol homophily:
-$absdiff.alcohol$ ($−0.11, p = 0.003$). The hypothesis is supported by these values. The negative coefficient on absolute difference means ties are more likely between students with similar alcohol consumption levels. The smaller the difference in alcohol scores between two students, the more likely they are to form a friendship, indicating clear homophillic tendencies regarding alcohol consumption.
+Hypothesis ($vi$) Alcohol consumption increases popularity: $nodeicov.alcohol$ ($+0.16, p = 0.004$).
+The hypothesis is supported by these values.
+Students with higher alcohol consumption receive significantly more friendship nominations.
+A one unit increase in alcohol score multiplies the odds of receiving a tie by $e^{0.16} ≈ 1.174$, suggesting heavier drinkers are perceived as more popular or socially attractive by their peers.
+With four units difference from $1$ to $5$, this means an approximate odd increase of $e^{0.16 * 4} ≈ 1.896$ for the heaviest drinkers in comparison to those with a value of $1$.
 
-## 2.6 
+Hypothesis ($vii$) Alcohol homophily: $absdiff.alcohol$ ($−0.11, p = 0.003$).
+The hypothesis is supported by these values.
+The negative coefficient on absolute difference means ties are more likely between students with similar alcohol consumption levels.
+The smaller the difference in alcohol scores between two students, the more likely they are to form a friendship, indicating clear homophillic tendencies regarding alcohol consumption.
 
-Since the data collection method only allowed the students to nominate 6 friends, a constraint that enforces this could be added to the ERGM estimation model to get this point correct, which would make the model itself more related to the model and fit some terms better. This would however raise the question if this is really wanted, since it is very possible that in real-life, students have more than 6 friendship nominations. So this should rather a problem to think about at the data collection part of data modelling.
+## 2.6
+
+Since the data collection method only allowed the students to nominate 6 friends, a constraint that enforces this could be added to the ERGM estimation model to get this point correct, which would make the model itself more related to the model and fit some terms better.
+This would however raise the question if this is really wanted, since it is very possible that in real-life, students have more than 6 friendship nominations.
+So this should rather a problem to think about at the data collection part of data modelling.
 From the results we found in 2.4, we should tweak the $\alpha$ decay value to a higher value like 0.3 or maybe even higher than that, since transitivity between students friendships seems to hold over more nodes than the current value estimates for and it does not correctly simulate the triadic patterns that can be found in this network.
-There is a very arguable point to be made that ties are also dependent on age-homophily, something that the current model does not account for at all, since the edges do not even have the age value added to them. There is really no reason not to add the age parameter to the model, since we already have the data available. Adding these terms:
+There is a very arguable point to be made that ties are also dependent on age-homophily, something that the current model does not account for at all, since the edges do not even have the age value added to them.
+There is really no reason not to add the age parameter to the model, since we already have the data available.
+Adding these terms:
+
 ```{r}
 # + nodeocov("age") + nodeicov("age") + absdiff("age")
 ```
-could help the model. Statistical outliers, like people who have to repeat a class, may be on one end of the spectrum and more likely to have drastically different data values than other students.
+
+could help the model.
+Statistical outliers, like people who have to repeat a class, may be on one end of the spectrum and more likely to have drastically different data values than other students.
 
 ## 2.7
 
 We suggest two hypotheses that center around the uncollected data of the students grades.
-The first hypothesis is centered around Academic homophily. This would require the following addition to the model:
+The first hypothesis is centered around Academic homophily.
+This would require the following addition to the model:
+
 ```{r}
 # + absdiff("grade")
 ```
-This could be computed like this: $\text{absdiff}(\text{"grade"}) = \sum_{i \neq j} y_{ij} \cdot |x_i^{\text{grade}} - x_j^{\text{grade}}|$, where $y_{ij}=1$ if student $i$ has nominated student $j$ and is $0$ otherwise. $x_k^{\text{grade}}$ corresponds to the grade of student $k$.
+
+This could be computed like this: $\text{absdiff}(\text{"grade"}) = \sum_{i \neq j} y_{ij} \cdot |x_i^{\text{grade}} - x_j^{\text{grade}}|$, where $y_{ij}=1$ if student $i$ has nominated student $j$ and is $0$ otherwise.
+$x_k^{\text{grade}}$ corresponds to the grade of student $k$.
 A negative coefficient would support the hypothesis in this case, as it would make ties more probable if they have similar grade levels.
 In the network graph, this effect would be seen as more ties existing between students of similar academic level.
 It should also be noted, that since we just assume one total grade for each student, there might be different results if the same hypothesis is executed on just single subject grades.
 
 The second hypothesis is that students with higher grades receive more friendship nominations.
 That would require this addition to the model to be figured out if the hypothesis is supported or not:
+
 ```{r}
 # + nodeicov("grade")
 ```
+
 This could be computed like this: $\text{nodeicov}(\text{"grade"}) = \sum_{i \neq j} y_{ij} \cdot x_j^{\text{grade}}$.
 A positive coefficient would support this hypothesis, as that would mean that students with higher grades receive more nominations.
 In the network graph, this could be seen as nodes with a high grade value having a relatively higher indegree than those with a lower grade.
 
 Both of these hypotheses could explain some residual variation in tie formation, that has not yet been captured by our current model.
 
-
-
-# Task 3: Network Autocorrelation Model
+# Task 3: Estimation and interpretation of SAOMs
 
 ## 3.1
-
-```{r message=FALSE}
-library(sna)
-library(network)
-library(numDeriv)
-library(ggplot2)
-
-# Read the adjacency matrix from the target classroom and do the checks
-friendships_path <- paste0("./Lintner/", 10, "_W2.csv")
-df <- read.csv2(friendships_path, header = TRUE, check.names = FALSE)
-student_ids <- df[[1]]
-friendships <- as.matrix(df[, -1])
-stopifnot(identical(as.integer(colnames(friendships)), student_ids))
-colnames(friendships) <- student_ids
-rownames(friendships) <- student_ids
-mode(friendships) <- "integer"
-  
-# Filter the attributes to contain only students from the target classroom
-attr_all <- read.csv2("./Lintner/attr.csv", header = TRUE, na.strings = c("", "NA"))
-attr_classroom <- attr_all[attr_all$classroomID == as.integer(10),]
-stopifnot(identical(attr_classroom$studentID, student_ids))
-rownames(attr_classroom) <- student_ids
-  
-# We remove students with no literacy_end, gender, or HISEI, or missing connections
-ids_bad_attr <- student_ids[is.na(attr_classroom$literacy_end)
-                              | is.na(attr_classroom$gender)
-                              | is.na(attr_classroom$HISEI)]
-ids_bad_friendships <- student_ids[apply(is.na(friendships), 1, any)]
-ids_bad <- unique(c(ids_bad_attr, ids_bad_friendships))
-keep <- !(student_ids %in% ids_bad)
-friendships_clean <- friendships[keep, keep]
-attr_clean <- attr_classroom[keep, ]
-student_ids_clean <- student_ids[keep]
-  
-# Convert categorical data to numeric for the gender field and make literacy end numeric
-attr_clean[attr_clean$gender == "female",]$gender <- 1
-attr_clean[attr_clean$gender == "male",]$gender <- 0
-attr_clean$literacy_end <- as.numeric(attr_clean$literacy_end)
-
-# Apply the row‑stochastic normalization to the friendships
-friendships_clean_row_stochastic <- sweep(
-  friendships_clean,
-  1,
-  ifelse(rowSums(friendships_clean) == 0, 1, rowSums(friendships_clean)),
-  FUN = "/"
-)
-```
+## 3.1.1
 
 ```{r}
-# Fit the model with the literacy end as the dependent variable and the friendship
-# in wave 2 as the network variable
-nam_model_1 <- lnam(
-  y  = attr_clean$literacy_end,
-  W1 = friendships_clean_row_stochastic
-)
-names(nam_model_1$rho1) <- "friendship"
-summary(nam_model_1)
+install.packages("RSiena")
+library(RSiena)
+library(sna)
+
+# Load friendship waves
+f1 <- matrix(as.numeric(as.matrix(read_matrix("Glasgow/f1.csv", header = FALSE))), 
+             nrow = 129, ncol = 129)
+f2 <- matrix(as.numeric(as.matrix(read_matrix("Glasgow/f2.csv", header = FALSE))), 
+             nrow = 129, ncol = 129)
+f3 <- matrix(as.numeric(as.matrix(read_matrix("Glasgow/f3.csv", header = FALSE))), 
+             nrow = 129, ncol = 129)
+
+# Read demographic, alcohol and logdistance data
+demographic <- read.csv("Glasgow/demographic.csv", header = TRUE)
+alcohol_data <- read.csv("Glasgow/alcohol.csv", header = TRUE)
+logdist <- matrix(as.numeric(unlist(strsplit(readLines("Glasgow/logdistance.csv"), ","))),nrow = 129, ncol = 129)
+
+
+friendship <- as_dependent_rsiena(array(c(f1, f2, f3), dim = c(129, 129, 3)))
+
+# Create covariates
+gender <- as_covariate_rsiena(demographic$gender, type = "monadic")
+alcohol <- as_covariate_rsiena(alcohol_data[, 1], type = "monadic")
+logdistance <- as_covariate_rsiena(logdist, type = "oneMode")
+
+# Combine into siena data object
+mydata <- make_data_rsiena(friendship, gender, alcohol, logdistance)
+#print(mydata)
+
+# Compute Jaccard index and data description
+write_report(mydata, outputName = "glasgowJaccardIndex")
+
+```
+From the data generated in the file "glasgowJaccardIndex", we have the resulting Jaccard Index values from Wave 1 $\rightarrow$ Wave 2 with a value of $0.304$ and from Wave 2 $\rightarrow$ Wave 3 with a value of $0.351$.
+Both of these values fit neatly into the recommended range of $[0.2,0.6]$, indicating that the data contains sufficient data to estimate a SAOM. If the value were below that range, it would mean the network changes too drastically and leaves no network stability, while a value above the range would indicate that the network hardly changes at all and shows no evolutionary traits. The higher Jaccard index from Wave 2 $\rightarrow$ Wave 3 indicates that the network gained stability over time.
+
+## 3.1.2
+
+```{r}
+myeff <- make_specification(mydata)
+
+#endogenous structural effects, from what generally should hold for networks
+myeff <- set_effect(myeff, list(recip))       # reciprocity
+myeff <- set_effect(myeff, list(transTrip))   # transitivity
+myeff <- set_effect(myeff, list(cycle3))      # 3-cycles
+
+#exogenous control effects, we know from task 2 that gender plays a huge role
+myeff <- set_effect(myeff, list(egoX, altX, sameX), covar1 = "gender")
+
+#Hypothesis i: popularity
+myeff <- set_effect(myeff, list(inPopSqrt))
+
+#Hypothesis ii: alcohol homophily
+myeff <- set_effect(myeff, list(egoX, altX, simX), covar1 = "alcohol")
+
+#Hypothesis iii: geographic proximity
+myeff <- set_effect(myeff, list(X), covar1 = "logdistance")
+
+myeff
+```
+## 3.1.3
+
+```{r}
+SAOMAlgorithm <- set_algorithm_saom(seed = 161, n3 = 3000, nsub = 4)
+
+# Estimate the model
+model_saom <- siena(data = mydata, 
+                effects = myeff, 
+                returnDeps = TRUE, 
+                batch = FALSE,
+                control_algo = SAOMAlgorithm)
+
+# Check results
+model_saom
 ```
 
-We observe that the network autocorrelation coefficient is $friendship = 0.852$ and highly significant with $p_{friendship} \le 0.001$. So, this initial model suggests a strong positive peer influence, namely a student's literacy score is highly positively correlated with the average literacy score of their friends.
 
 ## 3.2
 
-```{r}
-# Add gender and HISEI scores to the model as exogenous variables
-covars <- model.matrix(~ gender + HISEI, data = attr_clean)
-nam_model_2 <- lnam(
-  y  = attr_clean$literacy_end,
-  x  = covars,
-  W1 = friendships_clean_row_stochastic
-)
-names(nam_model_2$rho1) <- "friendship"
-names(nam_model_2$beta) <- c("intercept", "female", "HISEI")
-summary(nam_model_2)
-```
 
-In our second model, we added the gender and HISEI scores as exogenous variables.
+
 
 ## 3.3
 
-We observe that both covariates are statistically significant predictors of the ending literacy score. Being female has a strong, significant positive effect on literacy scores ($female = 20.883$ and $p_{female} \le 0.01$), and having a higher HISEI score also significantly increases literacy scores ($HISEI = 0.973$ and $p_{HISEI} \le 0.001$). What's surprising is that the network autocorrelation coefficient flips from a positive value computed at (1) to a negative value ($friendship = -0.940$) while remaining moderately significant ($p_{friendship} \le 0.05$).
 
 ## 3.4
 
-Looking first at the variables that appear in both analyses, gender is important in both models, but in different ways. In the MR-QAP, the coefficient for $sameGender$ is positive and highly significant, indicating strong gender homophily, namely friendship nominations are much more likely between students of the same gender. In the autocorrelation model, the coefficient for $female$ is also positive and significant, indicating that females have higher ending literacy scores on average. These findings are not contradictory, because they refer to different mechanisms. More specifically, one is a dyadic similarity effect on friendship ties, while the other is a monadic effect on academic performance.
-
-For HISEI, the two models diverge. In the MR-QAP, the sender’s HISEI has a positive but non-significant effect on sending friendship nominations, so there is no strong evidence that students with higher socioeconomic status nominate more friends. However, in the autocorrelation model, HISEI is positive and highly significant, showing that students from higher-status backgrounds tend to achieve higher literacy scores. This suggests that HISEI matters much more for academic outcomes than for friendship behavior in this classroom.
-
-Regarding the friendship, the findings also differ across the two models. In the MR-QAP, friendship in wave 1 strongly predicts friendship in wave 2, which shows substantial stability in the network over time. By contrast, in the autocorrelation model that takes gender and HISEI into account, the network coefficient is negative and significant. This means that students tend to have literacy scores that are lower when their friends’ average literacy is higher. Importantly, this does not contradict the QAP result since tie persistence and network autocorrelation concern different aspects of the data. A stable friendship network does not necessarily imply positive similarity in literacy outcomes.
 
 ## 3.5
 
-```{r message=FALSE}
-get_classroom_model <- function(classroom_id) {
-  # Read the adjacency matrix from the target classroom and do the checks
-  friendships_path <- paste0("./Lintner/", classroom_id, "_W2.csv")
-  df <- read.csv2(friendships_path, header = TRUE, check.names = FALSE)
-  student_ids <- df[[1]]
-  friendships <- as.matrix(df[, -1])
-  stopifnot(identical(as.integer(colnames(friendships)), student_ids))
-  colnames(friendships) <- student_ids
-  rownames(friendships) <- student_ids
-  mode(friendships) <- "integer"
-  
-  # Filter the attributes to contain only students from the target classroom
-  attr_all <- read.csv2("./Lintner/attr.csv", header = TRUE, na.strings = c("", "NA"))
-  attr_classroom <- attr_all[attr_all$classroomID == as.integer(classroom_id),]
-  stopifnot(identical(attr_classroom$studentID, student_ids))
-  rownames(attr_classroom) <- student_ids
-  
-  # We remove students with no literacy_end, gender, or HISEI, or missing connections
-  ids_bad_attr <- student_ids[is.na(attr_classroom$literacy_end)
-                              | is.na(attr_classroom$gender)
-                              | is.na(attr_classroom$HISEI)]
-  ids_bad_friendships <- student_ids[apply(is.na(friendships), 1, any)]
-  ids_bad <- unique(c(ids_bad_attr, ids_bad_friendships))
-  keep <- !(student_ids %in% ids_bad)
-  friendships_clean <- friendships[keep, keep]
-  attr_clean <- attr_classroom[keep, ]
-  student_ids_clean <- student_ids[keep]
-  
-  # Convert categorical data to numeric for the gender field and make
-  # literacy end numeric
-  attr_clean[attr_clean$gender == "female",]$gender <- 1
-  attr_clean[attr_clean$gender == "male",]$gender <- 0
-  attr_clean$literacy_end <- as.numeric(attr_clean$literacy_end)
-  
-  # Apply the row‑stochastic normalization to the friendships
-  friendships_clean_row_stochastic <- sweep(
-    friendships_clean,
-    1,
-    ifelse(rowSums(friendships_clean) == 0, 1, rowSums(friendships_clean)),
-    FUN = "/"
-  )
-  
-  # Fit the model
-  covars <- model.matrix(~ gender + HISEI, data = attr_clean)
-  nam_model <- lnam(
-    y  = attr_clean$literacy_end,
-    x  = covars,
-    W1 = friendships_clean_row_stochastic
-  )
-  names(nam_model$rho1) <- "friendship"
-  names(nam_model$beta) <- c("intercept", "female", "HISEI")
-  return (nam_model)
-}
-```
-
-```{r}
-classrooms <- c("01", "02", "03", "04", "05", "09", "10", "12")
-all_models <- list()
-
-for (classroom_id in classrooms) {
-  all_models[[classroom_id]] = get_classroom_model(classroom_id)  
-}
-stopifnot(all_models[["10"]]$rho1 == nam_model_2$rho1)
-stopifnot(all_models[["10"]]$beta == nam_model_2$beta)
-```
 
 ## 3.6
 
-```{r}
-# Extract data from all classroom in a dataframe
-results_list <- lapply(names(all_models), function(class_id) {
-  model <- all_models[[class_id]]
-  data.frame(
-    Classroom = class_id,
-    Variable = c("1. Friendship", "2. Gender", "3. HISEI"),
-    Estimate = as.numeric(c(model$rho1, model$beta[2], model$beta[3])),
-    SE = as.numeric(c(model$rho1.se, model$beta.se[2], model$beta.se[3]))
-  )
-})
-results_long <- do.call(rbind, results_list)
-
-# Calculate the p-values for all variables and classes
-z_scores <- results_long$Estimate / results_long$SE
-results_long$p_value <- 2 * (1 - pnorm(abs(z_scores)))
-
-# Plot the values using a scatterplot per variable
-ggplot(results_long, aes(x = Estimate, y = p_value)) +
-  geom_point(aes(color = p_value < 0.05), size = 3) +
-  geom_text(aes(label = Classroom), vjust = -1, size = 3) +
-  geom_vline(xintercept = 0, linetype = "dotted", color = "darkgray", linewidth = 1) +
-  geom_hline(yintercept = 0.05, linetype = "dashed", color = "red") +
-  facet_wrap(~ Variable, scales = "free_x") +
-  theme_bw() +
-  scale_color_manual(values = c("black", "green4"), name = "Significant (p < 0.05)") +
-  labs(
-    title = "Effect Sizes and Significance Across Classrooms",
-    x = "Estimated Coefficient",
-    y = "P-Value"
-  ) +
-  theme(legend.position = "top")
-```
-
-Based on the plotted coefficients and p-values across all eight classrooms, the network autocorrelation hypothesis is not generalizable.
-
-First, the network peer effect (Friendship) is highly inconsistent. It is only statistically significant in classroom 10 (where the effect is strongly negative), while the other seven classrooms show no significant peer influence at all, with estimates bouncing on both sides of zero. Second, even the individual attributes (Gender and HISEI) lack universal significance. Although their effect estimates are generally positive across the plots, they only reach statistical significance in classroom 10 (Gender and HISEI) and classroom 01 (HISEI).
-
-As a conclusion, these differences suggest that structural network effects and the influences of the selected individual attributes on literacy are heavily dependent on the context. The lack of generalizability implies that other factors need to be taken into account when considering the academic performance.
