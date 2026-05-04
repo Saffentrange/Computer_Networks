@@ -63,3 +63,88 @@ These were calculated from the data.
 
  12 parameters, 12 statistics
 
+Estimation of derivatives by the LR method (type 1).
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 4786 iterations.
+Parameter estimates based on 1786 iterations,
+basic rate parameters as well as 
+convergence diagnostics, covariance and derivative matrices based on 3000 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+  1.   0.0020  39.9433   0.0001 
+  2.   1.2367  35.6967   0.0346 
+  3.   1.2637 186.4995   0.0068 
+  4.   0.7977  58.4016   0.0137 
+  5.  -0.7441 127.5798  -0.0058 
+  6.  -0.4770  22.7683  -0.0210 
+  7.  -0.3375  19.5621  -0.0173 
+  8.  -0.5892  20.3669  -0.0289 
+  9.   0.5810  37.8454   0.0154 
+ 10.   1.7737  32.1011   0.0553 
+ 11.  -0.4513  34.8422  -0.0130 
+ 12.   0.1070   6.1812   0.0173 
+
+Good convergence is indicated by the t-ratios being close to zero.
+
+Overall maximum convergence ratio =  0.1427 .
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 4786 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+Rate parameters:
+ 0.1  Rate parameter period 1    11.0477  (   1.0316)
+ 0.2  Rate parameter period 2     9.0119  (   0.8199)
+
+Other parameters:
+ 1. eval:  outdegree (density)                                    -2.7997  (   0.1861)
+ 2. eval:  reciprocity                                             2.2204  (   0.1021)
+ 3. eval:  transitive triplets                                     0.6851  (   0.0424)
+ 4. eval:  3-cycles                                               -0.4654  (   0.0834)
+ 5. eval:  indegree - popularity (sqrt)                           -0.3044  (   0.0795)
+ 6. eval:  logdistance                                            -0.1541  (   0.0454)
+ 7. eval:  gender alter                                           -0.1513  (   0.1017)
+ 8. eval:  gender ego                                              0.1335  (   0.1038)
+ 9. eval:  same gender                                             0.9014  (   0.1021)
+10. eval:  alcohol alter                                          -0.0071  (   0.0351)
+11. eval:  alcohol ego                                            -0.0173  (   0.0308)
+12. eval:  alcohol similarity                                      0.4310  (   0.1713)
+
+
+@3
+Covariance matrices
+                   
+Covariance matrix of estimates (correlations below diagonal):
+     0.035     -0.003      0.001      0.000     -0.012     -0.001      0.000     -0.002     -0.009      0.000      0.000     -0.001
+    -0.165      0.010      0.001     -0.005      0.001      0.000      0.000      0.000      0.000      0.000      0.000      0.000
+     0.133      0.320      0.002     -0.003     -0.001      0.000      0.000      0.000      0.000      0.000      0.000      0.000
+     0.017     -0.581     -0.774      0.007      0.000      0.000      0.000      0.000      0.000      0.000      0.000      0.000
+    -0.842      0.070     -0.281      0.054      0.006      0.001      0.001      0.000      0.000      0.000      0.000      0.000
+    -0.120      0.028     -0.051      0.049      0.159      0.002      0.000      0.000      0.000      0.000      0.000      0.000
+    -0.001      0.007      0.052     -0.057      0.093      0.075      0.010     -0.008     -0.001     -0.001      0.000      0.000
+    -0.087      0.013     -0.045      0.031      0.013     -0.049     -0.734      0.011      0.002      0.000     -0.001      0.001
+    -0.499     -0.042     -0.072      0.038      0.033      0.027     -0.144      0.157      0.010      0.000      0.000     -0.001
+    -0.024      0.034     -0.025      0.014      0.032      0.015     -0.153     -0.001     -0.009      0.001      0.000      0.001
+     0.071     -0.050      0.028     -0.009     -0.051      0.008      0.036     -0.184     -0.059     -0.223      0.001      0.000
+    -0.016     -0.015      0.049     -0.022      0.017     -0.048     -0.005      0.050     -0.083      0.161      0.071      0.029
+
+Derivative matrix of expected statistics X by parameters and
+covariance/correlation matrix of X can be found using
+summary(ans) within R, or by using the 'verbose' option in Siena07.
+ 
+Total computation time 887.61 seconds.
