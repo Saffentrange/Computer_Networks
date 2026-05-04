@@ -11,119 +11,113 @@ editor_options:
 
 # Task 1: Geometrically Weighted Terms in ERGMs
 
-## 1.1
+## 1.1.i
 
-We compute $p$ by dividing the observed number of ties by the total number of pairs:
-
-$$
-  p=\frac{134}{22 \cdot 21}=134/462\approx0.290
-$$
-
-## 1.2
-
-We compute the probabilities by dividing the observed count of each dyad state by the total number of dyads:
+When a directed edge is added to a sender node with current out-degree k, exactly two terms in the GWD statistic are affected: the count of nodes with out-degree k decreases by one, and the count of nodes with out-degree k+1 increases by one.
+Thus, if we take the difference $s^{\text{GWD}}(x', \alpha) - s^{\text{GWD}}(x, \alpha)$, all terms in the sum except k and k+1 cancel out. Then we write out what is left giving us $e^\alpha \left[ \left(1 - \left(1 - e^{-\alpha}\right)^{k+1}\right) - \left(1 - \left(1 - e^{-\alpha}\right)^{k}\right) \right]$ and cancel the two ones: $e^\alpha \left[ \left(1 - e^{-\alpha}\right)^{k} - \left(1 - e^{-\alpha}\right)^{k+1} \right]$. Next we factor out $\left(1 - e^{-\alpha}\right) ^{k}$ leaving us with $e^\alpha \left(1 - e^{-\alpha}\right)^{k} \left[ 1 - \left(1 - e^{-\alpha}\right) \right]$. Finally we realize $1 - \left(1 - e^{-\alpha}\right) = e^{-\alpha}$ and thus we get $\delta^{\text{GWD}}(k, \alpha) = \left(1 - e^{-\alpha}\right)^{k}$.
 
 $$
-  \begin{aligned}
-    p_M=\frac{M}{M+A+N}=42/231\approx0.182 \\
-    p_A=\frac{A}{M+A+N}=50/231\approx0.216 \\
-    p_N=\frac{N}{M+A+N}=139/231\approx0.602
-  \end{aligned}
+\begin{align*}
+\delta^{\text{GWD}}(k, \alpha) &= s^{\text{GWD}}(x', \alpha) - s^{\text{GWD}}(x, \alpha) \\
+&= e^\alpha \left[ \left(1 - \left(1 - e^{-\alpha}\right)^{k+1}\right) - \left(1 - \left(1 - e^{-\alpha}\right)^{k}\right) \right] \\
+&= e^\alpha \left[ \left(1 - e^{-\alpha}\right)^{k} - \left(1 - e^{-\alpha}\right)^{k+1} \right] \\
+&= e^\alpha \left(1 - e^{-\alpha}\right)^{k} \left[ 1 - \left(1 - e^{-\alpha}\right) \right] \\
+&= e^\alpha \left(1 - e^{-\alpha}\right)^{k} \cdot e^{-\alpha} \\
+&= \boxed{\left(1 - e^{-\alpha}\right)^{k}}
+\end{align*}
 $$
 
-## 1.3
+## 1.1.ii
 
-If we assume independence and use the p in (1), we have:
-
-$$
-  \begin{aligned}
-    \text{Both ties exist:}\quad & p_M' = p^2 = (134/462)^2 \approx 0.084 \\
-    \text{Exactly one tie exists:}\quad & p_A' = 2 \cdot p \cdot (1-p) = 2 \cdot (134/462) \cdot (1 - 134/462) \approx 0.412 \\
-    \text{Neither tie exists:}\quad & p_N' = (1-p)^2 = (1 - 134/462)^2 \approx 0.504
-  \end{aligned}
-$$
-
-## 1.4
-
-It is not reasonable to assume tie independence for this network.
-
-Comparing the observed values computed at (2) with the expected values computed at (3), we observe that the proportion of mutual dyads is much higher than expected under independence, while the proportion of asymmetric dyads is substantially lower.
-The proportion of null dyads is also higher than predicted.
-
-This indicates that ties are not independent.
-In particular, there is evidence of positive reciprocity, meaning that the presence of a tie from $i$ to $j$ increases the likelihood of a tie from $j$ to $i$.
-Therefore, the assumption of tie independence is not appropriate for further analysis of this network.
-
-## 1.5
-
-If every node is forced to have an outdegree of exactly 9, the probability $\bar{p}$ of a tie appearing in an arbitrary pair becomes:
-
-$$
-  \bar{p}=\frac{9 \cdot 22/2}{22 \cdot 21/2}=3/7\approx0.429
-$$
-
-Assuming tie independence under this framework, the probability of a mutual tie would be:
-
-$$
-  \bar{p_M}=\bar{p}^2=(3/7)^2\approx0.184
-$$
-
-While this modeled mutual tie probability ($0.184$) is very close to the observed mutual tie probability computed at (2) ($0.182$), this is still not a reasonable model to assume overall.
-If all 22 nodes have an outdegree of 9, the total number of ties in the network would have to be $22 \cdot 9 = 198$.
-However, the observed network only has $m = 134$ ties.
-
-## 1.6
-
-```{r message=FALSE}
-library(sna)
+```{r}
+library(manynet)
+library(autograph)
 library(network)
-obsMat <- as.matrix(read.csv("./Lintner/10_W1.csv", sep = ";", row.names = 1))
+library(ergm)
+library(ggraph)
+library(patchwork)
+library(texreg)
+library(broom)
 
-obsMat[is.na(obsMat)] <- 0
-stopifnot(sum(is.na(obsMat)) == 0)
+f1 <- as.matrix(read.csv("f1.csv", header = FALSE))
+f2 <- as.matrix(read.csv("f2.csv", header = FALSE))
+f3 <- as.matrix(read.csv("f3.csv", header = FALSE))
 
-set.seed(161) 
-cguRec <- cug.test(obsMat, grecip, cmode = "edges", reps = 5000)
-cugInd <- cug.test(
-  obsMat,
-  centralization,
-  cmode = "edges",
-  FUN.arg = list(FUN = degree, cmode = "indegree"),
-  reps = 5000
-)
-cugTrans <- cug.test(obsMat, gtrans, cmode = "dyad.census", reps = 5000)
+demographic <- read.csv("demographic.csv")
+logdistance <- as.matrix(read.csv("logdistance.csv", header = FALSE))
+alcohol <- read.csv("alcohol.csv")
+
+# out degree range from f1
+max_k <- max(rowSums(f1))
+k_vals <- 0:max_k
+
+# change statistic function
+change_stat <- function(k, a) {
+  if (a == 0) {
+    return(ifelse(k==0, 1, 0))
+  }
+  return((1 - exp(-a))^k)
+}
+
+# alpha values to test
+decay_val_neg <- c(-1, -0.5)
+decay_val_pos <- c(0, 0.1, 0.2, 0.3, 0.5, log(2), 1, 2, 3)
+
+# generate plots for negative values of alpha
+par(mfrow = c(1,2))
+for (a in decay_val_neg) {
+  y_vals <- sapply(k_vals, change_stat, a = a)
+  plot(k_vals, y_vals, type = "b", pch = 19, col = "red",
+       main = paste("Alpha =", a), xlab = "Out-degree (k)", ylab = "Change Statistic")
+  abline(h = 0, lty = 2)
+}
+
+# generate plots for positive values of alpha
+par(mfrow = c(1, 1))
+colors <- rainbow(length(decay_val_pos))
+plot(NULL, xlim = c(0, max_k), ylim = c(0, 1), xlab = "Out-degree (k)",
+     ylab = "Change Statistic", main = "GWD Change Statistic (Non-negative Alpha)")
+
+for (i in 1:length(decay_val_pos)) {
+  y_vals <- sapply (k_vals, change_stat, a = decay_val_pos[i])
+  lines(k_vals, y_vals, type = "b", pch = 19, col = colors[i])
+}
+
+legend("topright", legend = round(decay_val_pos, 2), col = colors, lty = 1, pch = 19, title = "Alpha", cex = 0.8)
 ```
 
-The null hypothesis is $H_0$: *"The observed reciprocity is consistent with the random graph with the same number of edges"*.
-The conditional feature is the number of edges.
-From the below diagram, in the simulations, no random network has equal or more mutual dyads, and the p-value is $0$.
-Under a significance level of $\alpha=0.05$, we consider this result significant.
-Namely, reciprocity is much higher than expected by chance, and the null hypothesis is rejected.
+## 1.1.iii
 
-```{r}
-plot(cguRec)
-paste("p-value =", sprintf("%.3f", cguRec$pgteobs))
-```
+The figures from the previous task show us that the decay parameter is the primary influence on the diminishing marginal returns principle when using gwodegree. If we look at the change statistics, we can get the following takeaways, regarding how additional edges influence already popular nodes.
+The first takeaway is that for all non-negative decay values, the marginal contribution of an additional edge is strictly non-increasing. As can be seen in our plot, the weight added to the network statistic by a new edge is always maximized when the node where the edge originates has an out-degree of zero. As k increases, this contribution decreases, meaning that with each additional edge a node has, the weights of that nodes connections decrease.
+With the all-positive decay values, the value of alpha gives us the speed of this decrease (as can be seen in the plot). With small values of alpha, the change statistic drops to zero shortly after the first couple of edges, while the marginal contribution of nodes with higher out-degrees stays high with larger values of alpha. This allows us to choose how influential we want high-degree hub-nodes to be on the overall network statistic.
+The second takeaway is about the negative values for the decay parameter alpha. For negative values it has a very unstable behavior, as we can see in the way its graphs jump around. This is, because the base of our change statistic becomes negative and thus oscillates between positive and negative values, as the out-degree increases. This means that if a second edge is added to a node, this second tie would decrease the change statistic, while adding a third such tie would increase it again. Applied to real world scenarios, this makes little sense, which tells us that a positive alpha as decay parameter value is needed to have meaningful results.
 
-The null hypothesis is $H_0$: *"The observed indegree centralization is consistent with the random graph with the same number of edges"*.
-The conditional feature is the number of edges.
-From the below diagram, a large part of random networks has equal or more mutual dyads, and the p-value is $0.720$, above a significance level of $\alpha=0.05$, so we consider this result not significant.
-We fail to reject the null hypothesis, suggesting that the network does not display a significant level of hierarchical structure.
 
-```{r}
-plot(cugInd)
-paste("p-value =", sprintf("%.3f", cugInd$pgteobs))
-```
+## 1.1.iv
 
-The null hypothesis is $H_0$: *"The observed transitivity is consistent with random graphs having the same dyad census"*.
-The conditional features consist of the number of mutual dyads, asymmetric dyads, and null dyads.
-From the below diagram, none of the random networks has equal or more transitive triads, namely the p-value is $0$, under a significance level of $\alpha=0.05$.
-We consider this result significant, and the null hypothesis is rejected.
+To capture an activity effect where high out-degree nodes drive the statistic, we need to choose the decay parameter alpha to be relatively high. How high exactly depends on how high the out-degree nodes we want to drive the statistic are.
+As we can see in the plot of positive values for alpha, the choice of alpha influences the rate of diminishing marginal returns for each additional outgoing tie. When alpha is small, the change statistic drops to zero almost immediately after the first tie. The model essentially only distinguishes between isolates and non-isolates, which means that a small alpha would thus not effectively capture the behavior of high-activity nodes because their additional ties would contribute only a very small amount to the network statistic.
+If we choose a larger alpha (like 2 or 3 for example), the curve of the change statistic flattens, which causes the marginal contribution of an extra tie to remain substantial even as a node’s out-degree increases. This means that for a student in our dataset for example, if he already named four friends, naming the fifth and even a sixth friend still adds significant weight to the network statistic. This prevents the model from saturating early and maintains that additional ties from already active keep having marginal impact, which gives us our desired outcome, where high out-degree nodes drive the statistic.
 
-```{r}
-plot(cugTrans)
-paste("p-value =", sprintf("%.3f", cugTrans$pgteobs))
-```
+
+## 1.2.i
+
+
+
+## 1.2.ii
+
+
+
+## 1.2.iii
+
+
+
+## 1.2.iv
+
+
+
+
 
 # Task 2: Estimation and interpretation of an ERGM
 
