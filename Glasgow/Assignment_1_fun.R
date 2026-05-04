@@ -1,9 +1,3 @@
-install.packages(
-  c("network", "ergm", "manynet", "patchwork", "latticeExtra", "texreg", "broom")
-)
-
-remotes::install_github("stocnet/autograph", ref = "develop")
-
 library(manynet)
 library(autograph)
 library(network)
@@ -14,8 +8,8 @@ library(texreg)
 library(broom)
 
 f1 <- as.matrix(read.csv("f1.csv", header = FALSE))
-f2 <- as.matrix(read.csv("f2.csv", header = FALSE))
-f3 <- as.matrix(read.csv("f3.csv", header = FALSE))
+# f2 <- as.matrix(read.csv("f2.csv", header = FALSE))
+# f3 <- as.matrix(read.csv("f3.csv", header = FALSE))
 
 demographic <- read.csv("demographic.csv")
 logdistance <- as.matrix(read.csv("logdistance.csv", header = FALSE))
@@ -37,7 +31,7 @@ change_stat <- function(k, a) {
 decay_val_neg <- c(-1, -0.5)
 decay_val_pos <- c(0, 0.1, 0.2, 0.3, 0.5, log(2), 1, 2, 3)
 
-par(mfrow = c(1,1))
+par(mfrow = c(1,2))
 for (a in decay_val_neg) {
   y_vals <- sapply(k_vals, change_stat, a = a)
   plot(k_vals, y_vals, type = "b", pch = 19, col = "red",
