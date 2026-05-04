@@ -120,18 +120,85 @@ If we choose a larger alpha (like 2 or 3 for example), the curve of the change s
 
 ## 1.2.i
 
+```{r}
+f1_matrix <- as.matrix(read.csv("f1.csv", header = FALSE))
+glasgow_net <- as.network(f1_matrix, directed = TRUE)
 
+max_k <- max(rowSums(f1_matrix))
+
+m1 <- ergm(glasgow_net ~ edges)
+```
 
 ## 1.2.ii
 
-
+```{r}
+m2_neg <- ergm(glasgow_net ~ edges + offset(gwodegree(0.3, fixed = TRUE)),
+               offset.coef = c(-2))
+m2_pos <- ergm(glasgow_net ~ edges + offset(gwodegree(0.3, fixed = TRUE)),
+               offset.coef = c(2))
+```
 
 ## 1.2.iii
 
+```{r}
+sim_out_dist <- function(formula, coefficients, n_sim = 100, max_val) {
+  sims <- ergm::simulate_formula(formula, coef = coefficients, nsim = n_sim)
+  
+  dist_list <- lapply(sims, function(x) {
+    deg_counts <- table(factor(rowSums(as.matrix(x)), levels = 0:max_val))
+    return(as.data.frame(t(as.matrix(deg_counts))))
+  })
+  
+  return(do.call(rbind, dist_list))
+}
 
+set.seed(123)
+
+# M1
+sim_m1_df <- sim_out_dist(glasgow_net ~ edges, 
+                          coef(m1), 100, max_k)
+
+# M2 negative gwd
+sim_m2_neg_df <- sim_out_dist(glasgow_net ~ edges + offset(gwodegree(0.3, fixed = TRUE)), 
+                              coef(m2_neg), 100, max_k)
+# M2 positive gwd
+sim_m2_pos_df <- sim_out_dist(glasgow_net ~ edges + offset(gwodegree(0.3, fixed = TRUE)), 
+                              coef(m2_pos), 100, max_k)
+
+# formatting for plot
+process_df <- function(df, label) {
+  df %>%
+    pivot_longer(cols = everything(), names_to = "degree", values_to = "node_count") %>%
+    mutate(model = label, degree = as.numeric(degree))
+}
+
+# combine data
+plot_data <- rbind(
+  process_df(sim_m1_df, "M1 (Edges Only)"),
+  process_df(sim_m2_neg_df, "M2 (GWOD Negative)"),
+  process_df(sim_m2_pos_df, "M2 (GWOD Positive)")
+)
+
+# generate plot
+ggplot(plot_data, aes(x = factor(degree), y = node_count, fill = model)) +
+  geom_violin(trim = TRUE, scale = "width", alpha = 0.85) +
+  facet_wrap(~model) +
+  labs(
+    title    = "Out-Degree Distribution Comparison",
+    subtitle = "Decay = 0.3, 100 Simulations",
+    x        = "Out-degree (k)",
+    y        = "Number of Nodes"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
 
 ## 1.2.iv
 
+As we can see in the plot, the gwodegree alters the structural tendencies of a network compared to a random baseline network. By comparing the three different configurations, we can observe how different gwodegrees influence the degree variance among nodes.
+The baseline is our M1 configuration, which represents a Bernoulli random network where the probability of a tie is uniformly spread across all node pairs. As we can see, the out-degree distribution follows a typical bell-curve, that peaks at an out-degree of three. This indicates that most nodes have a similar number of outgoing ties and the extremes, nodes having zero or six ties, are infrequent.
+In M2 with a negative gwodegree, we can observe that with a negative gwodegree the distribution is flatter and more dispersed than in the random baseline. This is, because the model penalizes higher out-degrees if it has a negative gwodegree. Another obvious difference to the random baseline is, that the extremes of having six and especially zero ties are much more likely.
+ If we take a look at M2 with a positive gwodegree, we can see from the plot, that it increases the number of nodes with multiple outgoing ties. In this configuration, the distribution becomes much narrower and taller and is concentrated around out-degrees of two, three and four. What can also easily be noticed is that the number of isolated nodes with an out-degree of zero drops to almost zero. 
 
 
 
