@@ -9,6 +9,32 @@ editor_options:
 **Group number**: 21\
 **Group members**: Eduard Mihai, Hanzhang Wang, Silvan Affentranger, Linus Michel
 
+# Libraries
+```{r}
+# Install packages from CRAN
+install.packages(
+c("network", "ergm", "manynet", "patchwork", "latticeExtra", "texreg", "broom")
+)
+# Install autograph from GitHub develop branch
+# install.packages("remotes") # if not already installed
+remotes::install_github("stocnet/autograph", ref = "develop")
+# Loading libraries - stocnet suite
+library(manynet)
+library(autograph)
+# Loading libraries - sna suite
+library(network)
+library(ergm)
+# Loading libraries - plotting and presentation
+library(ggraph)
+library(patchwork)
+# library(latticeExtra) # improve the aesthetics of the MCMC diagnostics plots
+library(texreg)
+library(broom)
+library(sna)
+library(xtable)
+library(ggplot2)
+```
+
 # Task 1: Geometrically Weighted Terms in ERGMs
 
 ## 1.1.i
@@ -30,15 +56,6 @@ $$
 ## 1.1.ii
 
 ```{r}
-library(manynet)
-library(autograph)
-library(network)
-library(ergm)
-library(ggraph)
-library(patchwork)
-library(texreg)
-library(broom)
-
 f1 <- as.matrix(read.csv("f1.csv", header = FALSE))
 f2 <- as.matrix(read.csv("f2.csv", header = FALSE))
 f3 <- as.matrix(read.csv("f3.csv", header = FALSE))
@@ -121,30 +138,6 @@ If we choose a larger alpha (like 2 or 3 for example), the curve of the change s
 
 # Task 2: Estimation and interpretation of an ERGM
 
-```{r}
-# Install packages from CRAN
-install.packages(
-c("network", "ergm", "manynet", "patchwork", "latticeExtra", "texreg", "broom")
-)
-# Install autograph from GitHub develop branch
-# install.packages("remotes") # if not already installed
-remotes::install_github("stocnet/autograph", ref = "develop")
-# Loading libraries - stocnet suite
-library(manynet)
-library(autograph)
-# Loading libraries - sna suite
-library(network)
-library(ergm)
-# Loading libraries - plotting and presentation
-library(ggraph)
-library(patchwork)
-# library(latticeExtra) # improve the aesthetics of the MCMC diagnostics plots
-library(texreg)
-library(broom)
-library(sna)
-library(xtable)
-library(ggplot2)
-```
 
 ## 2.1
 
