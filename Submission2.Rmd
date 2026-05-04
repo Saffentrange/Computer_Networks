@@ -462,7 +462,7 @@ alcohol_data <- read.csv("Glasgow/alcohol.csv", header = TRUE)
 logdist <- matrix(as.numeric(unlist(strsplit(readLines("Glasgow/logdistance.csv"), ","))),nrow = 129, ncol = 129)
 
 
-friendship <- as_dependent_rsiena(array(c(f1, f2, f3), dim = c(129, 129, 3)))
+friendship <- as_dependent_rsiena(array(c(f1, f2, f3), dim = c(129, 129, 3)), allowOnly = FALSE)
 
 # Create covariates
 gender <- as_covariate_rsiena(demographic$gender, type = "monadic")
@@ -507,14 +507,15 @@ myeff
 ### 3.1.3
 
 ```{r}
-SAOMAlgorithm <- set_algorithm_saom(seed = 161, n3 = 3000, nsub = 4)
-
+#use different algorithm package thingy to allow constraint.
+SAOMAlgorithm <- sienaAlgorithmCreate(seed = 161, n3 = 3000, nsub = 4, MaxDegree = c(friendship = 6))
 # Estimate the model
-model_saom <- siena(data = mydata, 
+model_saom <- siena07(SAOMAlgorithm,
+                data = mydata, 
                 effects = myeff, 
                 returnDeps = TRUE, 
                 batch = FALSE,
-                control_algo = SAOMAlgorithm)
+                )
 
 #Check results and convergence criterion (as presented in the lecture slides)
 #model_saom
@@ -598,8 +599,8 @@ gof_tc
 ```
 The plot for the goodness of fit for the indegree distribution shows that our SAOM model captures this property well. The plot follows the real data and as such produces a p-value of $0.654$, which supports that the model captures this property well, since high p-values support the property being captured.
 The other three plotted parameters are all bad. To start of with, they all have a p-value of $0$, which means that not a single one of them accurately captures the observed data.
-The outdegree distribution too few nodes with a low outdegree, and overcompensates for the ones with high outdegree, meaning that the model makes the people more popular than they are supposed to be and produces less people who are less popular.
-The geodesic distribution itself has values that are way too low. All people are closer connected than they are in the observed data, meaning that
+The outdegree distribution too few nodes with a low outdegree, and overcompensates for the ones with high outdegree, meaning that the model makes the people more popular than they are supposed to be and produces less people who are less popular. 
+The geodesic distribution itself has values that are way too low. 
 
 
 

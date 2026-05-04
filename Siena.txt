@@ -1,0 +1,132 @@
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 04/05/2026 23:46:49
+New results follow.
+-----------------------------------
+
+RSiena version 1.6.6 (20 Apr 26)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Current random number seed is 161.
+Effects object used: myeff 
+Model Type:
+ Standard actor-oriented model 
+Estimation method: conditional moment estimation.
+Conditioning variable is the total number of observed changes ("distance") 
+in the network variable.
+Distances for simulations are
+period   :   1   2
+distance :  477 437.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Dependent network variable friendship :
+All digraphs are constrained to having outdegrees not larger than 6 .
+Initial value of gain parameter is  0.2000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  0.1  Rate parameter                         7.4542
+  0.2  Rate parameter                         6.8293
+  1. eval:  outdegree (density)                            -1.6130
+  2. eval:  reciprocity                                     0.0000
+  3. eval:  3-cycles                                        0.0000
+  4. eval:  indegree - popularity (sqrt)                    0.0000
+  5. eval:  logdistance                                     0.0000
+  6. eval:  alcohol alter                                   0.0000
+  7. eval:  alcohol ego                                     0.0000
+  8. eval:  alcohol similarity                              0.0000
+
+
+Values of target statistics are
+  1. Number of ties                                                     909.0000
+  2. Number of reciprocated ties                                        548.0000
+  3. 3-cycles                                                           328.0000
+  4. Sum of indegrees x sqrt(indegree)                                 1956.3520
+  5. Sum of ties x logdistance                                         -189.9997
+  6. Sum indegrees x alcohol                                            -50.7907
+  7. Sum outdegrees x alcohol                                           -59.7907
+  8. Similarity on alcohol                                               46.7154
+These were calculated from the data.
+
+ 8 parameters, 8 statistics
+
+Estimation of derivatives by the LR method (type 1).
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 4510 iterations.
+Parameter estimates based on 1510 iterations,
+basic rate parameters as well as 
+convergence diagnostics, covariance and derivative matrices based on 3000 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+  1.  -1.2780  26.4701  -0.0483 
+  2.  -1.1747  25.1911  -0.0466 
+  3.  -1.3583  30.1923  -0.0450 
+  4.  -4.1939  75.7040  -0.0554 
+  5.  -0.0103  20.8284  -0.0005 
+  6.   1.1091  30.2158   0.0367 
+  7.  -1.2252  25.5685  -0.0479 
+  8.  -0.0934   5.8338  -0.0160 
+
+Good convergence is indicated by the t-ratios being close to zero.
+
+Overall maximum convergence ratio =  0.1158 .
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 4510 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+Rate parameters:
+ 0.1  Rate parameter period 1    12.3619  (   1.3812)
+ 0.2  Rate parameter period 2     9.7971  (   0.9900)
+
+Other parameters:
+ 1. eval:  outdegree (density)                                    -2.5681  (   0.1455)
+ 2. eval:  reciprocity                                             2.2687  (   0.0867)
+ 3. eval:  3-cycles                                                1.0295  (   0.0537)
+ 4. eval:  indegree - popularity (sqrt)                            0.0056  (   0.0689)
+ 5. eval:  logdistance                                            -0.1852  (   0.0447)
+ 6. eval:  alcohol alter                                           0.0017  (   0.0314)
+ 7. eval:  alcohol ego                                            -0.0561  (   0.0385)
+ 8. eval:  alcohol similarity                                      0.4939  (   0.1650)
+
+
+@3
+Covariance matrices
+                   
+Covariance matrix of estimates (correlations below diagonal):
+     0.021     -0.003      0.001     -0.010      0.000      0.000      0.000     -0.001
+    -0.257      0.008     -0.001      0.001      0.000      0.000      0.000      0.000
+     0.078     -0.143      0.003     -0.001      0.000      0.000      0.000      0.000
+    -0.951      0.133     -0.217      0.005      0.000      0.000      0.000      0.000
+    -0.055      0.030     -0.001      0.088      0.002      0.000      0.000      0.000
+    -0.044      0.037      0.033      0.024     -0.008      0.001      0.000      0.001
+    -0.003     -0.018      0.001      0.016      0.114     -0.291      0.001      0.000
+    -0.038     -0.027      0.026     -0.007     -0.024      0.188      0.015      0.027
+
+Derivative matrix of expected statistics X by parameters and
+covariance/correlation matrix of X can be found using
+summary(ans) within R, or by using the 'verbose' option in Siena07.
+ 
+Total computation time 374.71 seconds.
