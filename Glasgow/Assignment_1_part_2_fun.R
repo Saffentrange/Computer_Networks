@@ -32,27 +32,32 @@ sim_out_dist <- function(formula, coefficients, n_sim = 100, max_val) {
 
 set.seed(123)
 
+# M1
 sim_m1_df <- sim_out_dist(glasgow_net ~ edges, 
                           coef(m1), 100, max_k)
 
+# M2 negative gwd
 sim_m2_neg_df <- sim_out_dist(glasgow_net ~ edges + offset(gwodegree(0.3, fixed = TRUE)), 
                               coef(m2_neg), 100, max_k)
-
+# M2 positive gwd
 sim_m2_pos_df <- sim_out_dist(glasgow_net ~ edges + offset(gwodegree(0.3, fixed = TRUE)), 
                               coef(m2_pos), 100, max_k)
 
+# formatting for plot
 process_df <- function(df, label) {
   df %>%
     pivot_longer(cols = everything(), names_to = "degree", values_to = "node_count") %>%
     mutate(model = label, degree = as.numeric(degree))
 }
 
+# combine data
 plot_data <- rbind(
   process_df(sim_m1_df, "M1 (Edges Only)"),
   process_df(sim_m2_neg_df, "M2 (GWOD Negative)"),
   process_df(sim_m2_pos_df, "M2 (GWOD Positive)")
 )
 
+# generate plot
 ggplot(plot_data, aes(x = factor(degree), y = node_count, fill = model)) +
   geom_violin(trim = TRUE, scale = "width", alpha = 0.85) +
   facet_wrap(~model) +
