@@ -1,8 +1,10 @@
 ---
-title: "Network Modeling: Assignment 2"
-output: pdf_document
-editor_options: 
-  markdown: 
+title: 'Network Modeling: Assignment 2'
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  markdown:
     wrap: sentence
 ---
 
@@ -11,127 +13,13 @@ editor_options:
 
 # Task 1: Geometrically Weighted Terms in ERGMs
 
-## 1.1
 
-We compute $p$ by dividing the observed number of ties by the total number of pairs:
-
-$$
-  p=\frac{134}{22 \cdot 21}=134/462\approx0.290
-$$
-
-## 1.2
-
-We compute the probabilities by dividing the observed count of each dyad state by the total number of dyads:
-
-$$
-  \begin{aligned}
-    p_M=\frac{M}{M+A+N}=42/231\approx0.182 \\
-    p_A=\frac{A}{M+A+N}=50/231\approx0.216 \\
-    p_N=\frac{N}{M+A+N}=139/231\approx0.602
-  \end{aligned}
-$$
-
-## 1.3
-
-If we assume independence and use the p in (1), we have:
-
-$$
-  \begin{aligned}
-    \text{Both ties exist:}\quad & p_M' = p^2 = (134/462)^2 \approx 0.084 \\
-    \text{Exactly one tie exists:}\quad & p_A' = 2 \cdot p \cdot (1-p) = 2 \cdot (134/462) \cdot (1 - 134/462) \approx 0.412 \\
-    \text{Neither tie exists:}\quad & p_N' = (1-p)^2 = (1 - 134/462)^2 \approx 0.504
-  \end{aligned}
-$$
-
-## 1.4
-
-It is not reasonable to assume tie independence for this network.
-
-Comparing the observed values computed at (2) with the expected values computed at (3), we observe that the proportion of mutual dyads is much higher than expected under independence, while the proportion of asymmetric dyads is substantially lower.
-The proportion of null dyads is also higher than predicted.
-
-This indicates that ties are not independent.
-In particular, there is evidence of positive reciprocity, meaning that the presence of a tie from $i$ to $j$ increases the likelihood of a tie from $j$ to $i$.
-Therefore, the assumption of tie independence is not appropriate for further analysis of this network.
-
-## 1.5
-
-If every node is forced to have an outdegree of exactly 9, the probability $\bar{p}$ of a tie appearing in an arbitrary pair becomes:
-
-$$
-  \bar{p}=\frac{9 \cdot 22/2}{22 \cdot 21/2}=3/7\approx0.429
-$$
-
-Assuming tie independence under this framework, the probability of a mutual tie would be:
-
-$$
-  \bar{p_M}=\bar{p}^2=(3/7)^2\approx0.184
-$$
-
-While this modeled mutual tie probability ($0.184$) is very close to the observed mutual tie probability computed at (2) ($0.182$), this is still not a reasonable model to assume overall.
-If all 22 nodes have an outdegree of 9, the total number of ties in the network would have to be $22 \cdot 9 = 198$.
-However, the observed network only has $m = 134$ ties.
-
-## 1.6
-
-```{r message=FALSE}
-library(sna)
-library(network)
-obsMat <- as.matrix(read.csv("./Lintner/10_W1.csv", sep = ";", row.names = 1))
-
-obsMat[is.na(obsMat)] <- 0
-stopifnot(sum(is.na(obsMat)) == 0)
-
-set.seed(161) 
-cguRec <- cug.test(obsMat, grecip, cmode = "edges", reps = 5000)
-cugInd <- cug.test(
-  obsMat,
-  centralization,
-  cmode = "edges",
-  FUN.arg = list(FUN = degree, cmode = "indegree"),
-  reps = 5000
-)
-cugTrans <- cug.test(obsMat, gtrans, cmode = "dyad.census", reps = 5000)
-```
-
-The null hypothesis is $H_0$: *"The observed reciprocity is consistent with the random graph with the same number of edges"*.
-The conditional feature is the number of edges.
-From the below diagram, in the simulations, no random network has equal or more mutual dyads, and the p-value is $0$.
-Under a significance level of $\alpha=0.05$, we consider this result significant.
-Namely, reciprocity is much higher than expected by chance, and the null hypothesis is rejected.
-
-```{r}
-plot(cguRec)
-paste("p-value =", sprintf("%.3f", cguRec$pgteobs))
-```
-
-The null hypothesis is $H_0$: *"The observed indegree centralization is consistent with the random graph with the same number of edges"*.
-The conditional feature is the number of edges.
-From the below diagram, a large part of random networks has equal or more mutual dyads, and the p-value is $0.720$, above a significance level of $\alpha=0.05$, so we consider this result not significant.
-We fail to reject the null hypothesis, suggesting that the network does not display a significant level of hierarchical structure.
-
-```{r}
-plot(cugInd)
-paste("p-value =", sprintf("%.3f", cugInd$pgteobs))
-```
-
-The null hypothesis is $H_0$: *"The observed transitivity is consistent with random graphs having the same dyad census"*.
-The conditional features consist of the number of mutual dyads, asymmetric dyads, and null dyads.
-From the below diagram, none of the random networks has equal or more transitive triads, namely the p-value is $0$, under a significance level of $\alpha=0.05$.
-We consider this result significant, and the null hypothesis is rejected.
-
-```{r}
-plot(cugTrans)
-paste("p-value =", sprintf("%.3f", cugTrans$pgteobs))
-```
 
 # Task 2: Estimation and interpretation of an ERGM
 
 ```{r}
 # Install packages from CRAN
-install.packages(
-c("network", "ergm", "manynet", "patchwork", "latticeExtra", "texreg", "broom")
-)
+install.packages(c("network", "ergm", "manynet", "patchwork", "latticeExtra", "texreg", "broom"))
 # Install autograph from GitHub develop branch
 # install.packages("remotes") # if not already installed
 remotes::install_github("stocnet/autograph", ref = "develop")
@@ -191,7 +79,7 @@ cat(sprintf("  Ratio Same-Diff gender   :  %.4f  \n", prob_same/prob_diff))
 
 ```
 
-Both results hold strong evidence that edges are both sparse ($\theta_{edges}=-5.0133$) and homophillic ($\theta_{match}=2.0098$), as p \<\< 0.05 in both cases.
+Both results hold strong evidence that edges are both sparse ($\theta_{edges}=-5.0133$) and homophillic ($\theta_{match}=2.0098$), as $p << 0.05$ in both cases.
 Although there is only a probability of $P_{same}= 4.7\%$ for a tie to exist between two students of the same gender, it is still $7.1563$ times higher than the probability of a tie existing between two students of opposite gender $P_{diff}=0.7\%$.
 The huge difference in Null Deviance to Residual Deviance ($22890 \rightarrow 3824$) also tells that the tie structure is very dependent on the chosen parameters.
 
@@ -389,6 +277,7 @@ Both of these hypotheses could explain some residual variation in tie formation,
 ```{r}
 install.packages("RSiena")
 library(RSiena)
+library(parallel)
 library(sna)
 
 # Load friendship waves
@@ -472,6 +361,82 @@ The SAOM was estimated with 4 subphases and 3000 iterations in phase 3, which wa
 These parameters consist of the three needed for answering our hypotheses: One parameter to control for the popularity of a student by checking for its indegree value, another to check for alcohol consumption homophily and the last one te see if geographic proximity has an affect on the model evolution.
 Furthermore we have some basic endogenous and exogenous variables that normally play a big part in the structure of most networks: Variables to check for the reciprocity of ties, the transitivity of ties and 3-cyclic patterns.
 Lastly we added in one more parameter, to give control for gender homophily. We have seen in task 2 that it plays a huge role in the structure of this specific network.
+
+
+### 3.1.4
+
+```{r}
+#most of this is just from the practical:
+cl <- makeCluster(4)
+
+# Indegree distribution
+gof_id <- test_gof(
+    model_saom,
+    verbose = FALSE,
+    varName = "friendship", IndegreeDistribution,
+    cluster = cl
+)
+
+# Outdegree distribution
+gof_od <- test_gof(
+    model_saom,
+    verbose = FALSE,
+    varName = "friendship", OutdegreeDistribution,
+    cluster = cl
+)
+
+# Triad census
+gof_tc <- test_gof(
+    model_saom,
+    verbose = FALSE,
+    varName = "friendship", TriadCensus,
+    cluster = cl
+)
+
+# Geodesic distance
+GeodesicDistribution <- function(
+    i, data, sims, period, groupName,
+    varName, levls = c(1:5, Inf), cumulative = TRUE
+) {
+    x <- networkExtraction(i, data, sims, period, groupName, varName)
+    require(sna)
+    a <- sna::geodist(symmetrize(x))$gdist
+    if (cumulative) {
+        gdi <- sapply(levls, function(i) { sum(a <= i) })
+    } else {
+        gdi <- sapply(levls, function(i) { sum(a == i) })
+    }
+    names(gdi) <- as.character(levls)
+    gdi
+}
+
+gof_gd <- test_gof(
+    model_saom,
+    verbose = FALSE,
+    varName = "friendship", GeodesicDistribution
+)
+
+stopCluster(cl)
+
+#Plot all four
+plot(gof_id)
+plot(gof_od)
+plot(gof_gd)
+plot(gof_tc, center = TRUE, scale = TRUE)
+gof_id
+gof_od
+gof_gd
+gof_tc
+```
+The plot for the goodness of fit for the indegree distribution shows that our SAOM model captures this property well. The plot follows the real data and as such produces a p-value of $0.654$, which supports that the model captures this property well, since high p-values support the property being captured.
+The other three plotted parameters are all bad. To start of with, they all have a p-value of $0$, which means that not a single one of them accurately captures the observed data.
+The outdegree distribution too few nodes with a low outdegree, and overcompensates for the ones with high outdegree, meaning that the model makes the people more popular than they are supposed to be and produces less people who are less popular.
+The geodesic distribution itself has values that are way too low. All people are closer connected than they are in the observed data, meaning that
+
+
+
+### 3.1.5
+
 
 ## 3.2
 
