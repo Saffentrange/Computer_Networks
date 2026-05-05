@@ -595,6 +595,25 @@ We have seen in task 2 that it plays a huge role in the structure of this specif
 
 ### 3.1.4
 
+```{r}
+# Geodesic distance
+GeodesicDistribution <- function(
+    i, data, sims, period, groupName,
+    varName, levls = c(1:5, Inf), cumulative = TRUE
+) {
+    x <- networkExtraction(i, data, sims, period, groupName, varName)
+    require(sna)
+    a <- sna::geodist(symmetrize(x))$gdist
+    if (cumulative) {
+        gdi <- sapply(levls, function(i) { sum(a <= i) })
+    } else {
+        gdi <- sapply(levls, function(i) { sum(a == i) })
+    }
+    names(gdi) <- as.character(levls)
+    gdi
+}
+```
+
 ```{r, eval=FALSE}
 #most of this is just from the practical:
 cl <- makeCluster(4)
@@ -622,23 +641,6 @@ gof_tc <- test_gof(
     varName = "friendship", TriadCensus,
     cluster = cl
 )
-
-# Geodesic distance
-GeodesicDistribution <- function(
-    i, data, sims, period, groupName,
-    varName, levls = c(1:5, Inf), cumulative = TRUE
-) {
-    x <- networkExtraction(i, data, sims, period, groupName, varName)
-    require(sna)
-    a <- sna::geodist(symmetrize(x))$gdist
-    if (cumulative) {
-        gdi <- sapply(levls, function(i) { sum(a <= i) })
-    } else {
-        gdi <- sapply(levls, function(i) { sum(a == i) })
-    }
-    names(gdi) <- as.character(levls)
-    gdi
-}
 
 gof_gd <- test_gof(
     model_saom,
@@ -835,7 +837,7 @@ We also added a parameter to control for same-gender homophily, as we have seen 
 
 ### 3.2.3
 
-```{r}
+```{r, eval=FALSE}
 ## Goodness of fit
 cl <- makeCluster(4)
 
@@ -851,6 +853,20 @@ gof_coev_beh <- test_gof(model_coev_final, verbose = FALSE,
                          varName = "alcoholbeh", BehaviorDistribution, cluster = cl)
 
 stopCluster(cl)
+saveRDS(gof_coev_id, "gof_coev_id.rds")
+saveRDS(gof_coev_od, "gof_coev_od.rds")
+saveRDS(gof_coev_gd, "gof_coev_gd.rds")
+saveRDS(gof_coev_tc, "gof_coev_tc.rds")
+saveRDS(gof_coev_beh, "gof_coev_beh.rds")
+```
+
+
+```{r}
+gof_coev_id <- readRDS("gof_coev_id.rds")
+gof_coev_od <- readRDS("gof_coev_od.rds")
+gof_coev_gd <- readRDS("gof_coev_gd.rds")
+gof_coev_tc <- readRDS("gof_coev_tc.rds")
+gof_coev_beh <- readRDS("gof_coev_beh.rds")
 
 plot(gof_coev_id)
 plot(gof_coev_od)
