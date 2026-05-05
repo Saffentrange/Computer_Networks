@@ -13,7 +13,7 @@ editor_options:
 **Group members**: Eduard Mihai, Hanzhang Wang, Silvan Affentranger, Linus Michel
 
 # Libraries
-```{r}
+```{r, eval=FALSE}
 # Install packages from CRAN
 install.packages(
 c("network", "ergm", "manynet", "patchwork", "latticeExtra", "texreg", "broom")
@@ -21,6 +21,10 @@ c("network", "ergm", "manynet", "patchwork", "latticeExtra", "texreg", "broom")
 # Install autograph from GitHub develop branch
 # install.packages("remotes") # if not already installed
 remotes::install_github("stocnet/autograph", ref = "develop")
+```
+
+
+```{r}
 # Loading libraries - stocnet suite
 library(manynet)
 library(autograph)
@@ -36,6 +40,7 @@ library(broom)
 library(sna)
 library(xtable)
 library(ggplot2)
+library(tidyr)
 ```
 
 # Task 1: Geometrically Weighted Terms in ERGMs
@@ -61,13 +66,13 @@ $$
 ### 1.1.ii
 
 ```{r}
-f1 <- as.matrix(read.csv("f1.csv", header = FALSE))
-f2 <- as.matrix(read.csv("f2.csv", header = FALSE))
-f3 <- as.matrix(read.csv("f3.csv", header = FALSE))
+f1 <- as.matrix(read.csv("Glasgow/f1.csv", header = FALSE))
+f2 <- as.matrix(read.csv("Glasgow/f2.csv", header = FALSE))
+f3 <- as.matrix(read.csv("Glasgow/f3.csv", header = FALSE))
 
-demographic <- read.csv("demographic.csv")
-logdistance <- as.matrix(read.csv("logdistance.csv", header = FALSE))
-alcohol <- read.csv("alcohol.csv")
+demographic <- read.csv("Glasgow/demographic.csv")
+logdistance <- as.matrix(read.csv("Glasgow/logdistance.csv", header = FALSE))
+alcohol <- read.csv("Glasgow/alcohol.csv")
 
 # out degree range from f1
 max_k <- max(rowSums(f1))
@@ -126,7 +131,7 @@ If we choose a larger alpha (like 2 or 3 for example), the curve of the change s
 ### 1.2.i
 
 ```{r}
-f1_matrix <- as.matrix(read.csv("f1.csv", header = FALSE))
+f1_matrix <- as.matrix(read.csv("Glasgow/f1.csv", header = FALSE))
 glasgow_net <- as.network(f1_matrix, directed = TRUE)
 
 max_k <- max(rowSums(f1_matrix))
@@ -224,7 +229,7 @@ set.seed(161)
 # this from the last assignment: permutations <- 5000
 #estimate ERGM with parameters of tie existence and if that tie is same gender
 model <- ergm(net ~ edges + nodematch("gender"), control = control.ergm(seed = 161))
-
+#saveRDS(model, "model.rds")
 summary(model)
 
 #get conditional probs ------
@@ -282,6 +287,7 @@ big_model <- ergm(net ~ edges + nodematch("gender") #same baseline as 2.1
                )
 #summary(big_model)
 #mcmc.diagnostics(big_model)
+#saveRDS(big_model, "big_model.rds")
 
 bigger_model <- ergm(net ~ edges + nodematch("gender") #same baseline as 2.1
                + mutual #(i) Reciprocity
@@ -301,6 +307,7 @@ bigger_model <- ergm(net ~ edges + nodematch("gender") #same baseline as 2.1
 
 summary(bigger_model)
 mcmc.diagnostics(bigger_model)
+#saveRDS(bigger_model, "bigger_model.rds")
 
 ```
 
@@ -445,8 +452,11 @@ Both of these hypotheses could explain some residual variation in tie formation,
 ## 3.1
 ### 3.1.1
 
-```{r}
+```{r, eval=FALSE}
 install.packages("RSiena")
+```
+
+```{r}
 library(RSiena)
 library(parallel)
 library(sna)
@@ -475,7 +485,10 @@ logdistance <- as_covariate_rsiena(logdist, type = "oneMode")
 # Combine into siena data object
 mydata <- make_data_rsiena(friendship, gender, alcohol, logdistance)
 #print(mydata)
+```
 
+
+```{r, eval=FALSE}
 # Compute Jaccard index and data description
 write_report(mydata, outputName = "glasgowJaccardIndex")
 
@@ -508,17 +521,23 @@ myeff <- set_effect(myeff, list(X), covar1 = "logdistance")
 myeff
 ```
 ### 3.1.3
-
 ```{r}
 #use different algorithm package thingy to allow constraint.
 SAOMAlgorithm <- sienaAlgorithmCreate(seed = 161, n3 = 3000, nsub = 4, MaxDegree = c(friendship = 6))
 # Estimate the model
+```
+
+```{r, eval=FALSE}
 model_saom <- siena07(SAOMAlgorithm,
                 data = mydata, 
                 effects = myeff, 
                 returnDeps = TRUE, 
                 batch = FALSE,
                 )
+#saveRDS(model_saom, "model_saom.rds")
+```
+
+```{r}
 
 #Check results and convergence criterion (as presented in the lecture slides)
 #model_saom
@@ -595,10 +614,6 @@ plot(gof_id)
 plot(gof_od)
 plot(gof_gd)
 plot(gof_tc, center = TRUE, scale = TRUE)
-gof_id
-gof_od
-gof_gd
-gof_tc
 ```
 The plot for the goodness of fit for the indegree distribution shows that our SAOM model captures this property well. The plot follows the real data and as such produces a p-value of $0.974$, which supports that the model captures this property well, since high p-values close to $1$ support the property being captured.
 The Outdegree distribution is at a low p-value of $0.047$, which means it somewhat captures this property. This had a p-value of 0 before implementing the maximum outdegree constraint of $6$ per student, as the data collection method enforces, meaning that the constraint is very important to capture the outdegree structure of the observed network, but it seems there are still some other variables that are important for the developement of the network that were not accounted for so far.
@@ -637,8 +652,15 @@ alcoholbeh <- as_dependent_rsiena(
 mydata_coev <- make_data_rsiena(friendship, alcoholbeh, gender, logdistance)
 
 # Check preconditions
-write_report(mydata_coev, outputName = "glasgowCoevReport")
+```
 
+
+```{r, eval=FALSE}
+write_report(mydata_coev, outputName = "glasgowCoevReport")
+```
+
+
+```{r}
 # Moran's I for autocorrelation in alcohol behaviour
 moran1 <- nacf(f1, alcohol_data[, 1], lag.max = 1, type = "moran",
                neighborhood.type = "out", mode = "digraph")
@@ -710,7 +732,7 @@ model_coev_final <- siena07(
   batch = FALSE
 )
 
-model_coev_final
+#model_coev_final
 
 # Convergence check
 t_ratios_coev <- apply(model_coev$sf, 2, mean) / apply(model_coev$sf, 2, sd)
