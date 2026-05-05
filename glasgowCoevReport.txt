@@ -1,12 +1,12 @@
 							************************
-									 glasgowJaccardIndex.txt
+									 glasgowCoevReport.txt
 							************************
 
-Filename is glasgowJaccardIndex.txt.
+Filename is glasgowCoevReport.txt.
 
-This file contains basic descriptives for SIENA data set <<mydata>>.
+This file contains basic descriptives for SIENA data set <<mydata_coev>>.
 
-Date and time: 05/05/2026 16:54:47 
+Date and time: 05/05/2026 18:06:39 
 
 RSiena version 1.6.6 (20 04 2026)
 
@@ -19,9 +19,9 @@ Data input.
 129 actors,
 1 dependent network variables,
 0 dependent bipartite variables,
-0 dependent discrete behavior variables,
+1 dependent discrete behavior variables,
 0 dependent continuous behavior variables,
-2 constant actor covariates,
+1 constant actor covariates,
 0 exogenous changing actor covariates,
 1 constant dyadic covariates,
 0 exogenous changing dyadic covariates,
@@ -139,25 +139,41 @@ No missing data for observation 3.
 
 
 
+
+@2
+Reading dependent actor variables.
+----------------------------------
+
+1st dependent actor variable named alcoholbeh.
+Maximum and minimum rounded values are 0 and 5.
+
+
+A total of 1 dependent actor variable.
+
+Number of missing cases per observation:
+ observation         1         2         3		overall
+alcoholbeh           0         0         0         0	  ( 0.0 %)
+
+Means per observation:
+ observation         1         2         3		overall
+alcoholbeh         2.465     2.690     3.140     2.765
+
 @2
 Reading constant actor covariates.
 ----------------------------------
 
-2 variables, named:
+1 variable, named:
 gender          
-alcohol         
 
-A total of 2 non-changing individual covariates.
+A total of 1 non-changing individual covariate.
 
 Number of missing cases:
 gender          0 	( 0.0 %)
-alcohol         0 	( 0.0 %)
 
 Information about covariates:
               minimum  maximum	  mean  centered 
 gender          1.0     2.0      1.434    Y 
-alcohol         0.0     5.0      2.465    Y 
-The mean values are subtracted from the covariates.
+The mean value is subtracted from the centered covariate.
 
 
 @2
@@ -184,7 +200,7 @@ For the similarity variable calculated from each actor covariate,
 the mean is subtracted.
 These means are:
 Similarity gender                   :       0.5048 
-Similarity alcohol                  :       0.7578 
+Similarity alcoholbeh               :       0.7419 
 
 
 
@@ -227,4 +243,38 @@ constant friendship rate (period 1)     7.4542
 constant friendship rate (period 2)     6.8293 
 outdegree (density)                               -1.6130 
 
-Initialisation of data set <<mydata>> executed succesfully.
+
+
+@2
+Dependent discrete actor variables:
+-----------------------------------
+
+alcoholbeh 
+
+
+@3
+Marginal distribution
+                     
+                Observations
+values               1     2     3
+                ------------------
+  0                  1     1     0
+  1                 23    23     9
+  2                 51    36    28
+  3                 28    35    39
+  4                 21    23    42
+  5                  5    11    11
+No missings
+
+
+
+@3
+Changes
+       
+ periods    actors:  down   up   constant  missing  ;   steps:   down    up  total
+  1  =>  2            22    42      65         0                   26    55    81
+  2  =>  3            18    56      55         0                   22    80   102
+
+For this variable, the standard initial behavioral tendency parameter is   0.3470
+
+Initialisation of data set <<mydata_coev>> executed succesfully.
