@@ -1,6 +1,7 @@
 ---
 title: 'Network Modeling: Assignment 2'
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 editor_options:
@@ -704,7 +705,7 @@ model_coev_final <- siena07(
   SAOMAlgorithm_converge,
   data = mydata_coev,
   effects = myeff_coev,
-  prevAns = model_coev, # Uses your previous failed run as the starting point
+  prevAns = model_coev, # Using previous failed run as the starting point
   returnDeps = TRUE,
   batch = FALSE
 )
@@ -784,7 +785,13 @@ Next to the selection processes the model also provides strong evidence for infl
 
 ## 3.3
 
+There are more nodes with a low geodesic distance in the simulated model than in the real observed one, meaning that the simulated one does not create as strongly isolated clusters as the observed model has. A simulated model could achieve better scores here, if it encourages isolated clusters more. This means we would require that the current transitivity effect becomes stronger. 
+At the same time, we need the students to be more likely to cut a tie when they do not share many common friends and are not connected well to the node otherwise. This should lead to stronger community forming.
+To futher get all the effects on transitivity, we should add the $transRecTrip$ and the $gwesp$ terms.
 
+The indegree distribution already closely follows the real world model, so it does not require any changes to it, since it currently captures the model very well.
+
+The outdegree distribution could be more accurate. It has too many students with a low outdegree, and too few students with a high outdegree. This too can be due to a too weak community clustering, although that should have a rather small effect on it, the model might just have an overall too high penalty for outgoing ties which would need to be reduced. We might need to include an additional parameter like $outAct$ to capture more details on the network structure.
 
 ## 3.4
 
