@@ -46,6 +46,7 @@ library(sna)
 library(xtable)
 library(ggplot2)
 library(tidyr)
+library(parallel)
 ```
 
 # Task 1: Geometrically Weighted Terms in ERGMs
@@ -397,7 +398,7 @@ It is to be noted though, that this term dropped from the model in 2.1 with a va
 
 Hypothesis ($i$) Reciprocity: $mutual$ ($+3.02, p < 0.001$).
 The hypothesis is strongly supported by these values.
-If student j has nominated student i, the odds of i nominating j back are multiplied by $e^{3.02} ≈ 20.5$.
+If student j has nominated student i, the odds of i nominating j back are multiplied by $e^{3.02} \approx 20.5$.
 This is the strongest effect that is found in this model, indicating it is a crucial deciding factor in how nominations are built up on.
 
 Hypothesis ($ii$) Transitivity: $gwesp$ ($+1.68, p < 0.001$).
@@ -418,14 +419,14 @@ Boys do not receive significantly more nominations than girls in this network, w
 Hypothesis ($v$) Alcohol consumption increases social activity: $nodeocov.alcohol$ ($−0.12, p = 0.032$).
 This hypothesis is not supported by these values, the somewhat low P-value along a negative coefficient say the opposite is supported.
 Higher alcohol consumption is associated with fewer outgoing nominations.
-A one unit increase in alcohol score decreases the odds-ratio of sending a tie by $e^{0.12} ≈ 1.127$, suggesting that heavier drinkers are actually less likely to actively nominate friends, contrary to the hypothesis.
-With four units difference from $1$ to $5$, this means an approximate odd-ratio decrease of $e^{0.12 * 4} ≈ 1.616$ for the heaviest drinkers in comparison to those with a value of $1$.
+A one unit increase in alcohol score decreases the odds-ratio of sending a tie by $e^{0.12} \approx 1.127$, suggesting that heavier drinkers are actually less likely to actively nominate friends, contrary to the hypothesis.
+With four units difference from $1$ to $5$, this means an approximate odd-ratio decrease of $e^{0.12 * 4} \approx 1.616$ for the heaviest drinkers in comparison to those with a value of $1$.
 
 Hypothesis ($vi$) Alcohol consumption increases popularity: $nodeicov.alcohol$ ($+0.16, p = 0.004$).
 The hypothesis is supported by these values.
 Students with higher alcohol consumption receive significantly more friendship nominations.
-A one unit increase in alcohol score multiplies the odds of receiving a tie by $e^{0.16} ≈ 1.174$, suggesting heavier drinkers are perceived as more popular or socially attractive by their peers.
-With four units difference from $1$ to $5$, this means an approximate odd increase of $e^{0.16 * 4} ≈ 1.896$ for the heaviest drinkers in comparison to those with a value of $1$.
+A one unit increase in alcohol score multiplies the odds of receiving a tie by $e^{0.16} \approx 1.174$, suggesting heavier drinkers are perceived as more popular or socially attractive by their peers.
+With four units difference from $1$ to $5$, this means an approximate odd increase of $e^{0.16 * 4} \approx 1.896$ for the heaviest drinkers in comparison to those with a value of $1$.
 
 Hypothesis ($vii$) Alcohol homophily: $absdiff.alcohol$ ($−0.11, p = 0.003$).
 The hypothesis is supported by these values.
@@ -594,7 +595,7 @@ We have seen in task 2 that it plays a huge role in the structure of this specif
 
 ### 3.1.4
 
-```{r}
+```{r, eval=FALSE}
 #most of this is just from the practical:
 cl <- makeCluster(4)
 
@@ -646,6 +647,18 @@ gof_gd <- test_gof(
 )
 
 stopCluster(cl)
+saveRDS(gof_id, "gof_id.rds")
+saveRDS(gof_od, "gof_od.rds")
+saveRDS(gof_gd, "gof_gd.rds")
+saveRDS(gof_tc, "gof_tc.rds")
+```
+
+
+```{r}
+gof_id <- readRDS("gof_id.rds")
+gof_od <- readRDS("gof_od.rds")
+gof_gd <- readRDS("gof_gd.rds")
+gof_tc <- readRDS("gof_tc.rds")
 
 #Plot all four
 plot(gof_id)

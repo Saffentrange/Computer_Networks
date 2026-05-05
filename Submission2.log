@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.5.6)  6 MAY 2026 00:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.5.6)  6 MAY 2026 00:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -426,26 +426,131 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 258.
 [2]
+<Submission2_files/Submission2_files/figure-latex/unnamed-chunk-4-1.pdf, id=24, 469.755pt x 325.215pt>
+File: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-4-1.pdf Graphic file (type pdf)
+<use Submission2_files/Submission2_files/figure-latex/unnamed-chunk-4-1.pdf>
+Package pdftex.def Info: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-4-1.pdf  used on input line 318.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[3{c:/Users/Silva/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{c:/Users/Silva/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{c:/Users/Silva/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{c:/Users/Silva/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}]
+<Submission2_files/Submission2_files/figure-latex/unnamed-chunk-4-2.pdf, id=38, 469.755pt x 325.215pt>
+File: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-4-2.pdf Graphic file (type pdf)
+<use Submission2_files/Submission2_files/figure-latex/unnamed-chunk-4-2.pdf>
+Package pdftex.def Info: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-4-2.pdf  used on input line 337.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[4 <./Submission2_files/Submission2_files/figure-latex/unnamed-chunk-4-1.pdf>] [5 <./Submission2_files/Submission2_files/figure-latex/unnamed-chunk-4-2.pdf>] [6]
+Overfull \hbox (28.99353pt too wide) in paragraph at lines 515--515
+[]\T1/lmtt/m/n/10 ## Convergence test p-value: 0.0114. Not converged with 99% confidence; increasing sample size.[] 
+ []
 
-! Package amsmath Error: Erroneous nesting of equation structures;
-(amsmath)                trying to recover with `aligned'.
+[7] [8]
+<Submission2_files/Submission2_files/figure-latex/unnamed-chunk-7-1.pdf, id=78, 469.755pt x 325.215pt>
+File: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-7-1.pdf Graphic file (type pdf)
+<use Submission2_files/Submission2_files/figure-latex/unnamed-chunk-7-1.pdf>
+Package pdftex.def Info: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-7-1.pdf  used on input line 611.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[9 <./Submission2_files/Submission2_files/figure-latex/unnamed-chunk-7-1.pdf>] [10] [11] [12]
+<Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-1.pdf, id=107, 469.755pt x 325.215pt>
+File: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-1.pdf Graphic file (type pdf)
+<use Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-1.pdf>
+Package pdftex.def Info: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-1.pdf  used on input line 863.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+<Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-2.pdf, id=108, 469.755pt x 325.215pt>
+File: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-2.pdf Graphic file (type pdf)
+<use Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-2.pdf>
+Package pdftex.def Info: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-2.pdf  used on input line 864.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+<Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-3.pdf, id=109, 469.755pt x 325.215pt>
+File: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-3.pdf Graphic file (type pdf)
+<use Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-3.pdf>
+Package pdftex.def Info: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-3.pdf  used on input line 865.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+<Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-4.pdf, id=110, 469.755pt x 325.215pt>
+File: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-4.pdf Graphic file (type pdf)
+<use Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-4.pdf>
+Package pdftex.def Info: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-4.pdf  used on input line 866.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 
-See the amsmath package documentation for explanation.
+Underfull \hbox (badness 10000) in paragraph at lines 863--867
+[][]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 863--867
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 863--867
+[]
+ []
+
+[13] [14 <./Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-1.pdf>] [15 <./Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-2.pdf>] [16 <./Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-3.pdf>] [17 <./Submission2_files/Submission2_files/figure-latex/unnamed-chunk-11-4.pdf>] [18] [19] [20] [21] [22]
+<Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-1.pdf, id=180, 469.755pt x 325.215pt>
+File: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-1.pdf Graphic file (type pdf)
+<use Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-1.pdf>
+Package pdftex.def Info: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-1.pdf  used on input line 1214.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+<Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-2.pdf, id=181, 469.755pt x 325.215pt>
+File: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-2.pdf Graphic file (type pdf)
+<use Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-2.pdf>
+Package pdftex.def Info: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-2.pdf  used on input line 1215.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+<Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-3.pdf, id=182, 469.755pt x 325.215pt>
+File: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-3.pdf Graphic file (type pdf)
+<use Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-3.pdf>
+Package pdftex.def Info: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-3.pdf  used on input line 1216.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+<Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-4.pdf, id=183, 469.755pt x 325.215pt>
+File: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-4.pdf Graphic file (type pdf)
+<use Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-4.pdf>
+Package pdftex.def Info: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-4.pdf  used on input line 1217.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+<Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-5.pdf, id=184, 469.755pt x 325.215pt>
+File: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-5.pdf Graphic file (type pdf)
+<use Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-5.pdf>
+Package pdftex.def Info: Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-5.pdf  used on input line 1218.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1214--1219
+[][]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1214--1219
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1214--1219
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1214--1219
+[]
+ []
+
+[23 <./Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-1.pdf>] [24 <./Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-2.pdf>] [25 <./Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-3.pdf>] [26 <./Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-4.pdf>] [27 <./Submission2_files/Submission2_files/figure-latex/unnamed-chunk-13-5.pdf>]
+
+! LaTeX Error: Unicode character ≈ (U+2248)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.278 \end{align*}
-                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
+l.1303 \(e^{3.02} ≈
+                      20.5\). This is the strongest effect that is found in ...
+You may provide a definition with
+\DeclareUnicodeCharacter 
 
  
 Here is how much of TeX's memory you used:
- 11546 strings out of 469339
- 179113 string characters out of 5464868
- 601257 words of memory out of 5000000
- 40202 multiletter control sequences out of 15000+600000
+ 11691 strings out of 469339
+ 186407 string characters out of 5464868
+ 614257 words of memory out of 5000000
+ 40304 multiletter control sequences out of 15000+600000
  680698 words of font info for 84 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 89i,5n,93p,354b,467s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 89i,13n,93p,458b,634s stack positions out of 10000i,1000n,20000p,200000b,200000s
 !  ==> Fatal error occurred, no output PDF file produced!
