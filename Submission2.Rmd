@@ -674,10 +674,12 @@ autocorr[, 2]
 ## Model specification
 myeff_coev <- make_specification(mydata_coev)
 
-# --- Selection part: identical to 3.1.2 ---
-myeff_coev <- set_effect(myeff_coev, list(recip),       depvar = "friendship")
-myeff_coev <- set_effect(myeff_coev, list(transTrip),   depvar = "friendship")
-myeff_coev <- set_effect(myeff_coev, list(cycle3),      depvar = "friendship")
+#endogenous structural effects, from what generally should hold for networks
+myeff_coev <- set_effect(myeff_coev, list(recip),       depvar = "friendship")       # reciprocity
+myeff_coev <- set_effect(myeff_coev, list(transTrip),   depvar = "friendship")       # transitivity
+myeff_coev <- set_effect(myeff_coev, list(cycle3),      depvar = "friendship")       # 3-cycles
+
+#exogenous control effects, we know from task 2 that gender plays a huge role
 myeff_coev <- set_effect(myeff_coev, list(egoX, altX, sameX), depvar = "friendship",
                          covar1 = "gender")
 
@@ -692,11 +694,6 @@ myeff_coev <- set_effect(myeff_coev, list(egoX, altX, simX), depvar = "friendshi
 myeff_coev <- set_effect(myeff_coev, list(X), depvar = "friendship",
                          covar1 = "logdistance")
 
-# --- Influence part: effects explaining alcohol behaviour evolution ---
-
-# Basic controls for behaviour (linear and quadratic shape)
-# These are included by default in make_specification but listed here for clarity
-# They capture the baseline tendency to increase/decrease alcohol consumption
 
 # Hypothesis iv: Popular students tend to increase or maintain alcohol consumption
 # indeg: students who receive more friendship nominations (more popular)
@@ -715,7 +712,17 @@ myeff_coev
 
 ### 3.2.2
 ```{r}
-## Model estimation
+# first step model estimation
+SAOMAlgorithm_coev <- sienaAlgorithmCreate(seed = 161, n3 = 3000, nsub = 4,
+                                           MaxDegree = c(friendship = 6))
+
+model_coev <- siena07(SAOMAlgorithm_coev,
+                      data    = mydata_coev,
+                      effects = myeff_coev,
+                      returnDeps = TRUE,
+                      batch = FALSE)
+
+# second step model estimation
 SAOMAlgorithm_converge <- sienaAlgorithmCreate(
   seed = 161, 
   n3 = 5000, 
@@ -746,7 +753,7 @@ overall_coev <- sqrt(t(apply(model_coev$sf, 2, mean)) %*%
 overall_coev
 ```
 As can be seen from these results, all absolute values of the t-ratios are below 0.1 and additionally the overall value also lies below 0.25. This fulfills the convergence criterion, indicating that all of our chosen parameters were sufficient to achieve convergence.
-The SAOM was estimated with 5 subphases and 5000 iterations in phase 3, which was enough to achieve this convergence and did not need to have another re-estimation or other model adjustments.
+In a first step, the SAOM was estimated with 4 subphases and 3000 iterations, however this did not converge so in a second step, we continued the estimate from our current estimate with 5 subphases and 5000 iterations in phase 3, which was enough to achieve this convergence and did not need to have another re-estimation or other model adjustments.
 These parameters consist of the three needed for answering our hypothesis: one parameter to control the popularity of a student by checking for the indegree-popularity value, another to check for alcohol consumption similarity and the last one to see if geographic proximity has an effect on the model evolution. For the influence part of the model we included average similarity and indegree effects on the alcohol behavior dependent variable. Furthermore, we included basic endogenous and exogenous variables that play a significant part in the structure of most networks: variables to check for reciprocity, transitive triplets, and 3-cyclic patterns. We also added a parameter to control for same-gender homophily, as we have seen that gender plays a major role in student network structures. 
 
 
@@ -818,6 +825,7 @@ The outdegree distribution could be more accurate. It has too many students with
 ## 3.4
 
 An additional hypothesis to further look into the co-evolution of social structures and alcohol consumption could be that the relationship between alcohol consumption and popularity is moderated by gender, suggesting that a high alcohol consumption increases the popularity of males but decreases it for females. To operationalize the corresponding effects  in the evaluation function, one would collect gender as a binary attribute and specify a behavior-related popularity effect interacted with a gender-ego effect. This tests if the “social reward” of drinking depends on the gender and would not treat all students as a homogeneous group, as there are now genders associated with each student.
+
 A second additional hypothesis to be tested would be that the influence of peers on alcohol consumption is influences by the frequency of their physical interactions outside of school. More specifically this means that students are more likely to assimilate to the alcohol levels of friends with whom they have a lot of physical interactions. This could be operationalized by collecting the contact frequency of friends as a dyadic covariate and implementing a weighted average similarity effect in the behavior dynamics part. Rather than the broad alcoholbeh average similarity coefficient, this would weight the influence of each friend by the reported frequency of their interactions.  
 
 
