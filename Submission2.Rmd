@@ -711,6 +711,9 @@ model_coev_final <- siena07(
 
 model_coev_final
 
+# save model
+saveRDS(model_coev_final, "model_coef_final.rds")
+
 # Convergence check
 t_ratios_coev <- apply(model_coev$sf, 2, mean) / apply(model_coev$sf, 2, sd)
 t_ratios_coev
@@ -720,21 +723,24 @@ overall_coev <- sqrt(t(apply(model_coev$sf, 2, mean)) %*%
 overall_coev
 ```
 As can be seen from these results, all absolute values of the t-ratios are below 0.1 and additionally the overall value also lies below 0.25. This fulfills the convergence criterion, indicating that all of our chosen parameters were sufficient to achieve convergence.
+The SAOM was estimated with 5 subphases and 5000 iterations in phase 3, which was enough to achieve this convergence and did not need to have another re-estimation or other model adjustments.
+These parameters consist of the three needed for answering our hypothesis: one parameter to control the popularity of a student by checking for the indegree-popularity value, another to check for alcohol consumption similarity and the last one to see if geographic proximity has an effect on the model evolution. For the influence part of the model we included average similarity and indegree effects on the alcohol behavior dependent variable. Furthermore, we included basic endogenous and exogenous variables that play a significant part in the structure of most networks: variables to check for reciprocity, transitive triplets, and 3-cyclic patterns. We also added a parameter to control for same-gender homophily, as we have seen that gender plays a major role in student network structures. 
+
 
 ### 3.2.3
 ```{r}
 ## Goodness of fit
 cl <- makeCluster(4)
 
-gof_coev_id <- test_gof(model_coev, verbose = FALSE,
+gof_coev_id <- test_gof(model_coev_final, verbose = FALSE,
                         varName = "friendship", IndegreeDistribution, cluster = cl)
-gof_coev_od <- test_gof(model_coev, verbose = FALSE,
+gof_coev_od <- test_gof(model_coev_final, verbose = FALSE,
                         varName = "friendship", OutdegreeDistribution, cluster = cl)
-gof_coev_tc <- test_gof(model_coev, verbose = FALSE,
+gof_coev_tc <- test_gof(model_coev_final, verbose = FALSE,
                         varName = "friendship", TriadCensus, cluster = cl)
-gof_coev_gd <- test_gof(model_coev, verbose = FALSE,
+gof_coev_gd <- test_gof(model_coev_final, verbose = FALSE,
                         varName = "friendship", GeodesicDistribution)
-gof_coev_beh <- test_gof(model_coev, verbose = FALSE,
+gof_coev_beh <- test_gof(model_coev_final, verbose = FALSE,
                          varName = "alcoholbeh", BehaviorDistribution, cluster = cl)
 
 stopCluster(cl)
@@ -748,9 +754,32 @@ plot(gof_coev_beh)
 model_coev
 ```
 
+The plot for the goodness of fit for the indegree distribution shows that our SAOM model captures this property very well. The plot follows the real data and as such produces a p-value of 0.933, which supports the fact that the model captures this property well. This is because high p-values close to 1 support the property being captured. Additionally, the behavior distribution for alcohol consumption is captured effectively with a p-value of 0.563, indicating the influence part of the model is performing reasonably well.
+The Outdegree distribution is at a low p-value of 0.01, which means it does not capture this property well. This is despite implementing the maximum outdegree constraint of 6 per student as the data collection method enforces, meaning that while the constraint is very important to reflect the observed network’s limits, there are still some other variables important for the development of the network that were not accounted for so far. The other two plotted parameters are both not captured well. To start of with, they both have a p-value of 0, which means that neither of them accurately capture the observed data.
+The geodesic distribution itself has values that are higher than they are supposed to be over all distances, granting it a p-value of 0. This means that the simulated network is more connected than the real one, and that the real one has more of a community type structured one, meaning there are more separate clusters that have only few edges going out / coming in.
+The Triad consensus also has a p-value of 0, and as seen in the graph, while it correctly predicts some kinds of triads, it is completely wrong by overestimating some and underestimating others. It makes it clear that some important terms for the development of the network are still left out and not being considered.
+
+
 ### 3.2.4
-```
-```
+Hypothesis iv: Popular students tend to increase or maintain their level of alcohol consumption:
+This hypothesis is not supported by the data. The estimate for the effect of indegree on alcoholbeh is 0.0703, which is positive but statistically insignificant given the standard error of 0.0645. Because the estimate is not at least twice the standard error, we can’t confidently conclude that popularity in the friendship network drives alcohol consumption. While the direction suggest popular students might consume more, the effect is not statistically distinguishable from zero.
+Hypothesis v: Students adjust their alcohol level to match their friends:
+This hypothesis is strongly supported, as the alcoholbeh average similarity effect has a high positive coefficient of 6.9119 and is statistically significant, as it has a standard error of 1.8432. This indicates that students change their drinking habits to minimize the distance between themselves and the average consumption level of their friends. The high behavior distribution with a p-value of 0.502 confirms that the model accurately captures these behavioral shifts.
+ 
+Revisiting hypotheses i-iii:
+Hypothesis i: Students tend to be friends with popular pupils:
+In the co-evolution model, the indegree-popularity effect is now negative  with a value of -0.2400 and significant as its standard error is 0.0761. This differs significantly from the finding in (1), where the effect was nearly zero and insignificant. This indicates that when we are accounting for alcohol co-evolution, students actually show a slight preference against forming ties with the most popular peers.
+Hypothesis ii: Students tend to be friends with pupils with similar alcohol consumption to theirs:
+The support for this hypothesis remains strong, but the magnitude has increased significantly. The alcoholbeh similarity coefficient rose from 0.494 in (1) to 1.1924 now. This suggests that once we account for the fact that friends influence each others drinking habits, the tendency to choose friends based on pre-existing alcohol similarity appears to be even stronger than previously thought.
+Hypothesis iii: Students tend to be friends with students who live in the same neighborhood (living nearby):
+For this hypothesis the findings remain consistent and significant. The logdistance coefficient is -0.1950 with a standard error of 0.0461, which closely matches the -0.185 we found in (1). The negative value confirms that as the distance between homes increases, the likelihood of friendship decreases, which supports our hypothesis that students from the same neighborhoods tend to be friends. However the geodesic distribution still has a p-value of 0, which tells us that while the distance of students is important, it is not sufficient to fully explain the network’s overall community structure.
+
+
+### 3.2.5
+
+We have strong evidence for both selection and influence processes operating simultaneously within the co-evolution of the friendship network and alcohol consumption. Selection processes can be seen by the alcoholbeh similarity in the Network Dynamics part of the model, which yields a positive estimate of 1.1924 with a standard error of 0.3403. Since this coefficient is more than three times its standard error, it is statistically significant, which indicates that students actively select friends who have similar drinking habits to their own. This selection based on behavioral homophily is a key driver of the friendship network’s structural evolution.
+Next to the selection processes the model also provides strong evidence for influence processes in the Behavior Dynamics part of the model. Here it shows a large estimate of 6.9119, that is stastically significant with a standard error of 1.8432, which confirms that students do not just choose similar friends, but also adapt their own alcohol consumption over time to align with the average behavior of their existing friend group (as also discussed in Task 3.2.4). 
+
 
 
 ## 3.3
@@ -758,5 +787,8 @@ model_coev
 
 
 ## 3.4
+
+An additional hypothesis to further look into the co-evolution of social structures and alcohol consumption could be that the relationship between alcohol consumption and popularity is moderated by gender, suggesting that a high alcohol consumption increases the popularity of males but decreases it for females. To operationalize the corresponding effects  in the evaluation function, one would collect gender as a binary attribute and specify a behavior-related popularity effect interacted with a gender-ego effect. This tests if the “social reward” of drinking depends on the gender and would not treat all students as a homogeneous group, as there are now genders associated with each student.
+A second additional hypothesis to be tested would be that the influence of peers on alcohol consumption is influences by the frequency of their physical interactions outside of school. More specifically this means that students are more likely to assimilate to the alcohol levels of friends with whom they have a lot of physical interactions. This could be operationalized by collecting the contact frequency of friends as a dyadic covariate and implementing a weighted average similarity effect in the behavior dynamics part. Rather than the broad alcoholbeh average similarity coefficient, this would weight the influence of each friend by the reported frequency of their interactions.  
 
 
