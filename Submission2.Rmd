@@ -39,7 +39,9 @@ library(ggplot2)
 
 # Task 1: Geometrically Weighted Terms in ERGMs
 
-## 1.1.i
+## 1.1
+
+### 1.1.i
 
 When a directed edge is added to a sender node with current out-degree k, exactly two terms in the GWD statistic are affected: the count of nodes with out-degree k decreases by one, and the count of nodes with out-degree k+1 increases by one.
 Thus, if we take the difference $s^{\text{GWD}}(x', \alpha) - s^{\text{GWD}}(x, \alpha)$, all terms in the sum except k and k+1 cancel out. Then we write out what is left giving us $e^\alpha \left[ \left(1 - \left(1 - e^{-\alpha}\right)^{k+1}\right) - \left(1 - \left(1 - e^{-\alpha}\right)^{k}\right) \right]$ and cancel the two ones: $e^\alpha \left[ \left(1 - e^{-\alpha}\right)^{k} - \left(1 - e^{-\alpha}\right)^{k+1} \right]$. Next we factor out $\left(1 - e^{-\alpha}\right) ^{k}$ leaving us with $e^\alpha \left(1 - e^{-\alpha}\right)^{k} \left[ 1 - \left(1 - e^{-\alpha}\right) \right]$. Finally we realize $1 - \left(1 - e^{-\alpha}\right) = e^{-\alpha}$ and thus we get $\delta^{\text{GWD}}(k, \alpha) = \left(1 - e^{-\alpha}\right)^{k}$.
@@ -55,7 +57,7 @@ $$
 \end{align*}
 $$
 
-## 1.1.ii
+### 1.1.ii
 
 ```{r}
 f1 <- as.matrix(read.csv("f1.csv", header = FALSE))
@@ -105,7 +107,7 @@ for (i in 1:length(decay_val_pos)) {
 legend("topright", legend = round(decay_val_pos, 2), col = colors, lty = 1, pch = 19, title = "Alpha", cex = 0.8)
 ```
 
-## 1.1.iii
+### 1.1.iii
 
 The figures from the previous task show us that the decay parameter is the primary influence on the diminishing marginal returns principle when using gwodegree. If we look at the change statistics, we can get the following takeaways, regarding how additional edges influence already popular nodes.
 The first takeaway is that for all non-negative decay values, the marginal contribution of an additional edge is strictly non-increasing. As can be seen in our plot, the weight added to the network statistic by a new edge is always maximized when the node where the edge originates has an out-degree of zero. As k increases, this contribution decreases, meaning that with each additional edge a node has, the weights of that nodes connections decrease.
@@ -113,14 +115,14 @@ With the all-positive decay values, the value of alpha gives us the speed of thi
 The second takeaway is about the negative values for the decay parameter alpha. For negative values it has a very unstable behavior, as we can see in the way its graphs jump around. This is, because the base of our change statistic becomes negative and thus oscillates between positive and negative values, as the out-degree increases. This means that if a second edge is added to a node, this second tie would decrease the change statistic, while adding a third such tie would increase it again. Applied to real world scenarios, this makes little sense, which tells us that a positive alpha as decay parameter value is needed to have meaningful results.
 
 
-## 1.1.iv
+### 1.1.iv
 
 To capture an activity effect where high out-degree nodes drive the statistic, we need to choose the decay parameter alpha to be relatively high. How high exactly depends on how high the out-degree nodes we want to drive the statistic are.
 As we can see in the plot of positive values for alpha, the choice of alpha influences the rate of diminishing marginal returns for each additional outgoing tie. When alpha is small, the change statistic drops to zero almost immediately after the first tie. The model essentially only distinguishes between isolates and non-isolates, which means that a small alpha would thus not effectively capture the behavior of high-activity nodes because their additional ties would contribute only a very small amount to the network statistic.
 If we choose a larger alpha (like 2 or 3 for example), the curve of the change statistic flattens, which causes the marginal contribution of an extra tie to remain substantial even as a node’s out-degree increases. This means that for a student in our dataset for example, if he already named four friends, naming the fifth and even a sixth friend still adds significant weight to the network statistic. This prevents the model from saturating early and maintains that additional ties from already active keep having marginal impact, which gives us our desired outcome, where high out-degree nodes drive the statistic.
 
-
-## 1.2.i
+## 1.2
+### 1.2.i
 
 ```{r}
 f1_matrix <- as.matrix(read.csv("f1.csv", header = FALSE))
@@ -131,7 +133,7 @@ max_k <- max(rowSums(f1_matrix))
 m1 <- ergm(glasgow_net ~ edges)
 ```
 
-## 1.2.ii
+### 1.2.ii
 
 ```{r}
 m2_neg <- ergm(glasgow_net ~ edges + offset(gwodegree(0.3, fixed = TRUE)),
@@ -140,7 +142,7 @@ m2_pos <- ergm(glasgow_net ~ edges + offset(gwodegree(0.3, fixed = TRUE)),
                offset.coef = c(2))
 ```
 
-## 1.2.iii
+### 1.2.iii
 
 ```{r}
 sim_out_dist <- function(formula, coefficients, n_sim = 100, max_val) {
@@ -195,7 +197,7 @@ ggplot(plot_data, aes(x = factor(degree), y = node_count, fill = model)) +
   theme(legend.position = "none")
 ```
 
-## 1.2.iv
+### 1.2.iv
 
 As we can see in the plot, the gwodegree alters the structural tendencies of a network compared to a random baseline network. By comparing the three different configurations, we can observe how different gwodegrees influence the degree variance among nodes.
 The baseline is our M1 configuration, which represents a Bernoulli random network where the probability of a tie is uniformly spread across all node pairs. As we can see, the out-degree distribution follows a typical bell-curve, that peaks at an out-degree of three. This indicates that most nodes have a similar number of outgoing ties and the extremes, nodes having zero or six ties, are infrequent.
@@ -597,15 +599,29 @@ gof_od
 gof_gd
 gof_tc
 ```
-The plot for the goodness of fit for the indegree distribution shows that our SAOM model captures this property well. The plot follows the real data and as such produces a p-value of $0.654$, which supports that the model captures this property well, since high p-values support the property being captured.
-The other three plotted parameters are all bad. To start of with, they all have a p-value of $0$, which means that not a single one of them accurately captures the observed data.
-The outdegree distribution too few nodes with a low outdegree, and overcompensates for the ones with high outdegree, meaning that the model makes the people more popular than they are supposed to be and produces less people who are less popular. 
-The geodesic distribution itself has values that are way too low. 
+The plot for the goodness of fit for the indegree distribution shows that our SAOM model captures this property well. The plot follows the real data and as such produces a p-value of $0.974$, which supports that the model captures this property well, since high p-values close to $1$ support the property being captured.
+The Outdegree distribution is at a low p-value of $0.047$, which means it somewhat captures this property. This had a p-value of 0 before implementing the maximum outdegree constraint of $6$ per student, as the data collection method enforces, meaning that the constraint is very important to capture the outdegree structure of the observed network, but it seems there are still some other variables that are important for the developement of the network that were not accounted for so far.
 
-
+The other two plotted parameters are both not captured well. To start of with, they both have a p-value of $0$, which means that neither of them accurately capture the observed data.
+The geodesic distribution itself has values that are higher than they are supposed to be over all distances, granting it a p-value of $0$. This means that the simulated network is more connected than the real one, and that the real one has more of a community type structured one, meaning there are more seperate clusters that have only few edges going out / coming in.
+The Triad consensus also has a p-value of $0$, and as seen in the graph, while it correctly predicts some kinds of triads, it is completely wrong by overestimating some and underestimating others. It makes it clear that some important terms for the development of the network are still left out and not being considered.
 
 ### 3.1.5
 
+```{r}
+source("printSiena.R")
+model_saom
+printSiena(model_saom)
+```
+Hypothesis ($i$) Students tend to be friends with popular pupils:
+This hypothesis is not supported by the SAOM model. The extremely high p-value $0.935$ shows no significance, along with the the near zero coefficient $+0.006$, showing that even if it had significance, the effect would be barely noticeable. Since SAOM estimate how the network changes, it just says the popularity plays no role in the formation of new ties. A student will nominate a person regardless of how popular that student already is.
+
+Hypothesis ($ii$) Students tend to be friends with pupils with similar alcohol consumption to theirs:
+With a p-value of $0.003$, this hypothesis is significant and with a coefficient value of $+0.494$ is supported. The likelyhood of a tie forming between two students at the same alcohol consumption level is $e^{0.494} \approx 1.64$ times higher than if they had the biggest possible difference. This means that alcohol homophily is an important factor in the development of the structural network and that friendships will center partly around the alcohol consumption level of students. This means that alcohol consumption contributes to cluster formation around alcohol homophily.
+It is to be noted that both alcohol alter and alcohol ego have high p-values and low total coefficients, meaning that alcohol consumption has no noticeable effect on the amount of nominations a student will send or receive.
+
+Hypothesis ($iii$) Students tend to be friends with students who live in the same neighborhood (living nearby):
+The values of logdistance support this hypothesis. With a near zero p-value and a coefficient of $-0.185$, the simulated model predicts that the further away two students live from each other, the less likely it becomes that they nominate one another. Thus they are more likely to nominate someone who lives close to them. Similar to alcohol homophily, this means that the geological position of students homes will lead to some clustering over enough time. So if the network has its nodes centered on a map, it should show clear clustering around certain areas like different neighborhoods.
 
 ## 3.2
 ### 3.2.1
