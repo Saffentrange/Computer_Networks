@@ -688,7 +688,10 @@ myeff_coev <- set_effect(myeff_coev, list(avSim), depvar = "alcoholbeh",
                          covar1 = "friendship")
 
 myeff_coev
+```
 
+### 3.2.2
+```{r}
 ## Model estimation
 SAOMAlgorithm_converge <- sienaAlgorithmCreate(
   seed = 161, 
@@ -715,8 +718,11 @@ overall_coev <- sqrt(t(apply(model_coev$sf, 2, mean)) %*%
                        solve(cov(model_coev$sf)) %*% 
                        apply(model_coev$sf, 2, mean))
 overall_coev
+```
+As can be seen from these results, all absolute values of the t-ratios are below 0.1 and additionally the overall value also lies below 0.25. This fulfills the convergence criterion, indicating that all of our chosen parameters were sufficient to achieve convergence.
 
-
+### 3.2.3
+```{r}
 ## Goodness of fit
 cl <- makeCluster(4)
 
@@ -742,6 +748,9 @@ plot(gof_coev_beh)
 model_coev
 ```
 
+### 3.2.4
+```
+```
 
 
 ## 3.3
