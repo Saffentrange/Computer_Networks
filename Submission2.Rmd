@@ -406,7 +406,7 @@ The hypothesis is strongly supported by these values.
 When two students share a common friend, a tie between them becomes significantly more likely.
 This supports a typical triadic closure structure in the model, which occurs in most social networks and also leads to the formation of clusters.
 
-Hypothesis ($iii$) Boys have higher social activity: $nodeofactor.gender$ ($−0.10, p = 0.498$).
+Hypothesis ($iii$) Boys have higher social activity: $nodeofactor.gender$ ($-0.10, p = 0.498$).
 This hypothesis is not supported by these values.
 The coefficient for boys sending more nominations than girls is small and negative, which would suggest that the opposite is slightly true.
 This however is not the case either, since the P-value is so high and as such, not making it statistically significant.
@@ -416,7 +416,7 @@ This hypothesis is not supported by these values.
 The coefficient is near zero and the high P-value means it is completely insignificant.
 Boys do not receive significantly more nominations than girls in this network, which, along with Hypothesis ($iii$), means that gender has no direct influence on how popular or socially active a person is.
 
-Hypothesis ($v$) Alcohol consumption increases social activity: $nodeocov.alcohol$ ($−0.12, p = 0.032$).
+Hypothesis ($v$) Alcohol consumption increases social activity: $nodeocov.alcohol$ ($-0.12, p = 0.032$).
 This hypothesis is not supported by these values, the somewhat low P-value along a negative coefficient say the opposite is supported.
 Higher alcohol consumption is associated with fewer outgoing nominations.
 A one unit increase in alcohol score decreases the odds-ratio of sending a tie by $e^{0.12} \approx 1.127$, suggesting that heavier drinkers are actually less likely to actively nominate friends, contrary to the hypothesis.
@@ -428,7 +428,7 @@ Students with higher alcohol consumption receive significantly more friendship n
 A one unit increase in alcohol score multiplies the odds of receiving a tie by $e^{0.16} \approx 1.174$, suggesting heavier drinkers are perceived as more popular or socially attractive by their peers.
 With four units difference from $1$ to $5$, this means an approximate odd increase of $e^{0.16 * 4} \approx 1.896$ for the heaviest drinkers in comparison to those with a value of $1$.
 
-Hypothesis ($vii$) Alcohol homophily: $absdiff.alcohol$ ($−0.11, p = 0.003$).
+Hypothesis ($vii$) Alcohol homophily: $absdiff.alcohol$ ($-0.11, p = 0.003$).
 The hypothesis is supported by these values.
 The negative coefficient on absolute difference means ties are more likely between students with similar alcohol consumption levels.
 The smaller the difference in alcohol scores between two students, the more likely they are to form a friendship, indicating clear homophillic tendencies regarding alcohol consumption.
@@ -759,11 +759,7 @@ myeff_coev <- set_effect(myeff_coev, list(egoX, altX, simX), depvar = "friendshi
 myeff_coev <- set_effect(myeff_coev, list(X), depvar = "friendship",
                          covar1 = "logdistance")
 
-# --- Influence part: effects explaining alcohol behaviour evolution ---
-
-# Basic controls for behaviour (linear and quadratic shape)
-# These are included by default in make_specification but listed here for clarity
-# They capture the baseline tendency to increase/decrease alcohol consumption
+# Influence part: effects explaining alcohol behaviour evolution
 
 # Hypothesis iv: Popular students tend to increase or maintain alcohol consumption
 # indeg: students who receive more friendship nominations (more popular)
@@ -772,7 +768,7 @@ myeff_coev <- set_effect(myeff_coev, list(indeg), depvar = "alcoholbeh",
                          covar1 = "friendship")
 
 # Hypothesis v: Students adjust alcohol consumption to that of their friends
-# avSim: average similarity effect — ego moves their behaviour toward
+# avSim: average similarity effect - ego moves their behaviour toward
 # the average alcohol level of their alters (the core social influence effect)
 myeff_coev <- set_effect(myeff_coev, list(avSim), depvar = "alcoholbeh",
                          covar1 = "friendship")
