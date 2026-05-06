@@ -138,14 +138,12 @@ Applied to real world scenarios, this makes little sense, which tells us that a 
 
 ### 1.1.iv
 
-To capture an activity effect where high out-degree nodes drive the statistic, we need to choose the decay parameter alpha to be relatively high.
-How high exactly depends on how high the out-degree nodes we want to drive the statistic are.
-As we can see in the plot of positive values for alpha, the choice of alpha influences the rate of diminishing marginal returns for each additional outgoing tie.
-When alpha is small, the change statistic drops to zero almost immediately after the first tie.
-The model essentially only distinguishes between isolates and non-isolates, which means that a small alpha would thus not effectively capture the behavior of high-activity nodes because their additional ties would contribute only a very small amount to the network statistic.
-If we choose a larger alpha (like 2 or 3 for example), the curve of the change statistic flattens, which causes the marginal contribution of an extra tie to remain substantial even as a node’s out-degree increases.
-This means that for a student in our dataset for example, if he already named four friends, naming the fifth and even a sixth friend still adds significant weight to the network statistic.
-This prevents the model from saturating early and maintains that additional ties from already active keep having marginal impact, which gives us our desired outcome, where high out-degree nodes drive the statistic.
+As we can see in the plot, the Geometrically Weighted Out-degree alters the structural tendencies of a network compared to a random baseline network. By comparing the three different model configurations, we can observe how different gwodegrees influence the degree variance among nodes.
+The baseline for this comparison is our M1 configuration, which represents a Bernoulli random network where the probability of a tie is uniformly spread across all node pairs. As we can see, in this structure, the out-degree distribution follows a typical bell-curve, that peaks at an out-degree of three. This indicates that most nodes have a similar number of outgoing ties and the extremes, nodes having zero ties or six ties, are infrequent.
+In M2 with a negative gwodegree, the network behavior changes and we can observe that with a negative gwodegree the distribution is flatter and more dispersed than in the random baseline. This is, because the model penalizes higher out-degrees if it has a negative gwodegree. Another obvious difference to the random baseline is, that the extremes of having six and especially zero ties are much more likely.
+If we take a look at M2 with a positive gwodegree, we can see from the plot, that it increases the number of nodes with multiple outgoing ties. In this configuration, the distribution becomes much narrower and taller and is heavily concentrated around out-degrees of two, three and four. This positive weighting encourages nodes to maintain a consistent level of activity. What can also easily be noticed is that the number of isolated nodes with an out-degree of zero drops to almost zero. 
+
+
 
 ## 1.2
 
@@ -738,13 +736,15 @@ moran3 <- nacf(f3, alcohol_data[, 3], lag.max = 1, type = "moran",
 autocorr <- rbind(moran1, moran2, moran3)
 autocorr[, 2]
 
-## Model specification
+# Model specification
 myeff_coev <- make_specification(mydata_coev)
 
-# --- Selection part: identical to 3.1.2 ---
-myeff_coev <- set_effect(myeff_coev, list(recip),       depvar = "friendship")
-myeff_coev <- set_effect(myeff_coev, list(transTrip),   depvar = "friendship")
-myeff_coev <- set_effect(myeff_coev, list(cycle3),      depvar = "friendship")
+#endogenous structural effects, from what generally should hold for networks
+myeff_coev <- set_effect(myeff_coev, list(recip),       depvar = "friendship")     # reciprocity
+myeff_coev <- set_effect(myeff_coev, list(transTrip),   depvar = "friendship")     # transitivity
+myeff_coev <- set_effect(myeff_coev, list(cycle3),      depvar = "friendship")     # 3-cycles
+
+#exogenous control effects, we know from task 2 that gender plays a huge role
 myeff_coev <- set_effect(myeff_coev, list(egoX, altX, sameX), depvar = "friendship",
                          covar1 = "gender")
 
@@ -759,7 +759,6 @@ myeff_coev <- set_effect(myeff_coev, list(egoX, altX, simX), depvar = "friendshi
 myeff_coev <- set_effect(myeff_coev, list(X), depvar = "friendship",
                          covar1 = "logdistance")
 
-# Influence part: effects explaining alcohol behaviour evolution
 
 # Hypothesis iv: Popular students tend to increase or maintain alcohol consumption
 # indeg: students who receive more friendship nominations (more popular)
@@ -823,13 +822,14 @@ overall_coev <- sqrt(t(apply(model_coev_final$sf, 2, mean)) %*%
 overall_coev
 ```
 
-As can be seen from these results, all absolute values of the t-ratios are below 0.1 and additionally the overall value also lies below 0.25.
+As can be seen from the model results, all absolute values of the individual convergence t-ratios are below 0.1 and additionally the overall value also lies below the 0.25 threshold. This fulfills the convergence criterion for Stochastic Actor-Oriented Models (SAOMs), indicating that all of our chosen parameters were sufficient to achieve convergence.
 This fulfills the convergence criterion, indicating that all of our chosen parameters were sufficient to achieve convergence.
 The SAOM was estimated with 5 subphases and 5000 iterations in phase 3, which was enough to achieve this convergence and did not need to have another re-estimation or other model adjustments.
-These parameters consist of the three needed for answering our hypothesis: one parameter to control the popularity of a student by checking for the indegree-popularity value, another to check for alcohol consumption similarity and the last one to see if geographic proximity has an effect on the model evolution.
-For the influence part of the model we included average similarity and indegree effects on the alcohol behavior dependent variable.
-Furthermore, we included basic endogenous and exogenous variables that play a significant part in the structure of most networks: variables to check for reciprocity, transitive triplets, and 3-cyclic patterns.
-We also added a parameter to control for same-gender homophily, as we have seen that gender plays a major role in student network structures.
+The parameters for our model were chosen to answer hypotheses i-v. These parameters include key network effects: one parameter to control the popularity of a student by checking for the indegree-popularity value, another to evaluate selection effects through alcohol consumption similarity and the third and last one to see if geographic proximity has an effect on the model evolution.
+For the influence part of the model we included average similarity and indegree effects on the alcohol behavior dependent variable, to test for socialization and status-driven consumption.
+Furthermore, the model includes basic endogenous variables like reciprocity, transitive triplets and 3-cyclic patterns to account for the structural complexity of social ties.
+We also added a parameter to control for same-gender homophily, as we have seen previously that gender plays a major role in student network structures.
+
 
 ### 3.2.3
 
@@ -909,12 +909,10 @@ However the geodesic distribution still has a p-value of 0, which tells us that 
 
 ### 3.2.5
 
-We have strong evidence for both selection and influence processes operating simultaneously within the co-evolution of the friendship network and alcohol consumption.
-Selection processes can be seen by the alcoholbeh similarity in the Network Dynamics part of the model, which yields a positive estimate of 1.1924 with a standard error of 0.3403.
-Since this coefficient is more than three times its standard error, it is statistically significant, which indicates that students actively select friends who have similar drinking habits to their own.
-This selection based on behavioral homophily is a key driver of the friendship network’s structural evolution.
-Next to the selection processes the model also provides strong evidence for influence processes in the Behavior Dynamics part of the model.
-Here it shows a large estimate of 6.9119, that is stastically significant with a standard error of 1.8432, which confirms that students do not just choose similar friends, but also adapt their own alcohol consumption over time to align with the average behavior of their existing friend group (as also discussed in Task 3.2.4).
+Based on the converged model results, we have strong evidence for both selection and influence processes operating simultaneously within the co-evolution of the friendship network and alcohol consumption. Selection processes can be seen by the alcoholbeh similarity in the Network Dynamics part of the model, which yields a positive estimate of 1.1924 with a standard error of 0.3403. Since this coefficient is more than three times its standard error, it is statistically significant, which indicates that students actively select students as their friends who have similar drinking habits to their own. This selection based on behavioral homophily is a key driver of the friendship network’s structural evolution, which suggests that shared behaviors, in this case the alcohol consumption, are a primary foundation for new social ties.
+In addition to these selection processes the model also provides strong evidence for influence processes in the Behavior Dynamics part of the model. For the alcoholbeh average similarity effect it shows a large estimate of 6.9119, that is statically significant with a standard error of 1.8432. This confirms that students do not just choose similar friends, but also adapt their own alcohol consumption over time to align with the average behavior of their existing friend group (as also discussed in Task 3.2.4).
+These findings are further supported by the model’s overall performance, as the behavior distribution shows a p-value of 0.563, confirming that the simulated model accurately mirrors the behavior shifts seen in the real, observed network. Furthermore, the model achieved a convergence with a maximum t-ration of 0.1573, well below the 0.25 threshold, which ensures that the estimates for both selection and influence are stable and statistically sound.
+
 
 ## 3.3
 
@@ -934,10 +932,6 @@ We might need to include an additional parameter like $outAct$ to capture more d
 
 ## 3.4
 
-An additional hypothesis to further look into the co-evolution of social structures and alcohol consumption could be that the relationship between alcohol consumption and popularity is moderated by gender, suggesting that a high alcohol consumption increases the popularity of males but decreases it for females.
-To operationalize the corresponding effects in the evaluation function, one would collect gender as a binary attribute and specify a behavior-related popularity effect interacted with a gender-ego effect.
-This tests if the “social reward” of drinking depends on the gender and would not treat all students as a homogeneous group, as there are now genders associated with each student.
-A second additional hypothesis to be tested would be that the influence of peers on alcohol consumption is influences by the frequency of their physical interactions outside of school.
-More specifically this means that students are more likely to assimilate to the alcohol levels of friends with whom they have a lot of physical interactions.
-This could be operationalized by collecting the contact frequency of friends as a dyadic covariate and implementing a weighted average similarity effect in the behavior dynamics part.
-Rather than the broad alcoholbeh average similarity coefficient, this would weight the influence of each friend by the reported frequency of their interactions.
+An additional hypothesis to further look into the co-evolution of social structures and alcohol consumption could be that the relationship between alcohol consumption and popularity is moderated by gender. This hypothesis suggests that a high alcohol consumption increases the popularity of males but decreases it for females. To operationalize the corresponding effects in the evaluation function, one would collect gender as a binary attribute and specify a behavior-related popularity effect interacted with a gender-ego effect. This approach would test if the “social reward” of drinking (measured by incoming friendship nominations) depends on the gender. By doing so, the model would not treat all students as a homogeneous group and would acknowledge that drinking habits can be viewed differently by genders and can influence the selection process within the network.
+A second additional hypothesis to be tested would be that the influence of peers on alcohol consumption is influenced by the frequency of their physical interactions outside of school. More specifically this means that students are more likely to assimilate to the alcohol levels of friends with whom they have a lot of physical interactions. This could be operationalized by collecting the contact frequency of friends as a dyadic covariate and implementing a weighted average similarity effect in the behavior dynamics part of the model. Rather than the broad alcoholbeh average similarity coefficient, this more specific approach would weight the influence of each friend by the reported frequency of their interactions. This allows the model to capture the fact that close friends that see each other frequently likely have a much stronger impact on behavior chanages than more distant or infrequent friends.
+
